@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>今週の予測 - BOAT PREDICTOR</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { dark: { 900: '#0a0e1a', 800: '#111827', 700: '#1e293b' } } } }
+    }
+  </script>
+</head>
+<body class="bg-[#0a0e1a] text-slate-100 min-h-screen flex flex-col">
+
+  <div id="app-header"></div>
+
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ページヘッダー -->
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-white mb-1">
+        <i class="fa-solid fa-calendar-week text-sky-500 mr-2"></i>今週の予測一覧
+      </h1>
+      <p class="text-slate-400 text-sm" id="week-range"></p>
+    </div>
+
+    <!-- 日付タブ -->
+    <div class="mb-4 overflow-x-auto pb-2">
+      <div class="flex gap-2" id="date-tabs"></div>
+    </div>
+
+    <!-- レース場フィルター -->
+    <div class="mb-6 overflow-x-auto pb-2">
+      <div class="flex gap-2" id="stadium-filter"></div>
+    </div>
+
+    <!-- 集計サマリー -->
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <div class="bg-gray-900 rounded-xl border border-slate-700/50 p-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-sky-500/10 flex items-center justify-center">
+            <i class="fa-solid fa-bullseye text-sky-500 text-xl"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-400">本日の的中</p>
+            <p class="text-xl font-bold text-white" id="today-stats">-</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-900 rounded-xl border border-slate-700/50 p-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center">
+            <i class="fa-solid fa-chart-pie text-amber-500 text-xl"></i>
+          </div>
+          <div>
+            <p class="text-xs text-slate-400">今週の的中</p>
+            <p class="text-xl font-bold text-white" id="week-stats">-</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 予測カード一覧 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="prediction-cards">
+    </div>
+
+    <!-- 空状態 -->
+    <div id="empty-state" class="hidden text-center py-16">
+      <i class="fa-solid fa-inbox text-4xl text-slate-600 mb-4"></i>
+      <p class="text-slate-500">この日の予測はありません</p>
+    </div>
+
+  </main>
+
+  <script src="../shared/dummy-data.js"></script>
+  <script src="../shared/common.js"></script>
+  <script src="../shared/header.js"></script>
+  <script>
+    let selectedDate = '2026-02-23';
+    let selectedStadium = 'all';
+
+    document.addEventListener('DOMContentLoaded', function () {
+      initWeekRange();
+      initDateTabs();
+      initStadiumFilter();
+      renderCards();
+      updateStats();
+    });
+
+    function initWeekRange() {
+      const dates = getWeekDates();
+      document.getElementById('week-range').textContent =
+        `${formatDate(dates[0])} ~ ${formatDate(dates[6])}`;
+    }
+
+    function initDateTabs() {
+      const container = document.getElementById('date-tabs');
+      const dates = getWeekDates();
+      dates.forEach(date => {
+        const btn = document.createElement('button');
+        btn.textContent = formatDate(date);
+        btn.dataset.date = date;
+        btn.className = date === selectedDate
+          ? 'px-4 py-2 rounded-lg text-sm font-medium bg-sky-500 text-white whitespace-nowrap transition'
+          : 'px-4 py-2 rounded-lg text-sm font-medium bg-slate-800 text-slate-400 hover:bg-slate-700 whitespace-nowrap transition';
+        btn.addEventListener('click', () => {
+          selectedDate = date;
+          document.querySelectorAll('#date-tabs button').forEach(b => {
+            b.className = 'px-4 py-2 rounded-lg text-sm font-medium bg-slate-800 text-slate-400 hover:bg-slate-700 whitespace-nowrap transition';
+          });
+          btn.className = 'px-4 py-2 rounded-lg text-sm font-medium bg-sky-500 text-white whitespace-nowrap transition';
+          renderCards();
+          updateStats();
+        });
+        container.appendChild(btn);
+      });
+    }
+
+    function initStadiumFilter() {
+      const container = document.getElementById('stadium-filter');
+      // 全場ボタン
+      const allBtn = document.createElement('button');
+      allBtn.textContent = '全場';
+      allBtn.dataset.stadium = 'all';
+      allBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-medium bg-sky-500 text-white whitespace-nowrap transition';
+      allBtn.addEventListener('click', () => selectStadiumFilter('all'));
+      container.appendChild(allBtn);
+
+      // ダミーデータに含まれるレース場のみ
+      const stadiums = [...new Set(DUMMY_WEEKLY.map(w => w.stadium))];
+      stadiums.forEach(num => {
+        const btn = document.createElement('button');
+        btn.textContent = STADIUMS[num];
+        btn.dataset.stadium = num;
+        btn.className = 'px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-400 hover:bg-slate-700 whitespace-nowrap transition';
+        btn.addEventListener('click', () => selectStadiumFilter(num));
+        container.appendChild(btn);
+      });
+    }
+
+    function selectStadiumFilter(stadium) {
+      selectedStadium = stadium;
+      document.querySelectorAll('#stadium-filter button').forEach(b => {
+        b.className = String(b.dataset.stadium) === String(stadium)
+          ? 'px-3 py-1.5 rounded-lg text-xs font-medium bg-sky-500 text-white whitespace-nowrap transition'
+          : 'px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-400 hover:bg-slate-700 whitespace-nowrap transition';
+      });
+      renderCards();
+    }
+
+    function renderCards() {
+      let filtered = DUMMY_WEEKLY.filter(w => w.date === selectedDate);
+      if (selectedStadium !== 'all') {
+        filtered = filtered.filter(w => w.stadium === selectedStadium);
+      }
+
+      const container = document.getElementById('prediction-cards');
+      const empty = document.getElementById('empty-state');
+
+      if (filtered.length === 0) {
+        container.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      container.innerHTML = filtered.map(item => {
+        const stadiumName = STADIUMS[item.stadium];
+        const logic = DUMMY_LOGICS.find(l => l.id === item.logic);
+        let resultHtml = '';
+        if (item.result) {
+          if (item.hit) {
+            resultHtml = `
+              <div class="flex items-center gap-2 mt-3">
+                <span class="text-xs text-slate-400">結果:</span>
+                ${renderPredictionOrder(item.result, 'sm')}
+                <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-green-500/20 text-green-400 ml-auto">
+                  <i class="fa-solid fa-circle-check mr-1"></i>的中
+                </span>
+              </div>`;
+          } else {
+            resultHtml = `
+              <div class="flex items-center gap-2 mt-3">
+                <span class="text-xs text-slate-400">結果:</span>
+                ${renderPredictionOrder(item.result, 'sm')}
+                <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-red-500/20 text-red-400 ml-auto">
+                  <i class="fa-solid fa-circle-xmark mr-1"></i>不的中
+                </span>
+              </div>`;
+          }
+        } else {
+          resultHtml = `
+            <div class="flex items-center gap-2 mt-3">
+              <span class="text-xs text-slate-400">結果:</span>
+              <span class="text-slate-500 text-sm">-- 未確定 --</span>
+            </div>`;
+        }
+
+        return `
+          <div class="bg-gray-900 rounded-xl border border-slate-700/50 p-5 hover:border-slate-500 transition">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-white font-bold">${stadiumName}</span>
+                <span class="text-sky-400 font-mono text-sm">${item.race}R</span>
+              </div>
+              <span class="px-2 py-0.5 rounded text-xs font-medium bg-sky-500/20 text-sky-400">${logic ? logic.name : ''}</span>
+            </div>
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-xs text-slate-400">信頼度</span>
+              <div class="flex-1">${getConfidenceBar(item.confidence)}</div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-400">予想:</span>
+              ${renderPredictionOrder(item.prediction, 'sm')}
+            </div>
+            ${resultHtml}
+          </div>`;
+      }).join('');
+    }
+
+    function updateStats() {
+      // 本日
+      const todayItems = DUMMY_WEEKLY.filter(w => w.date === selectedDate && w.result !== null);
+      const todayHits = todayItems.filter(w => w.hit).length;
+      const todayTotal = todayItems.length;
+      const todayPercent = todayTotal > 0 ? (todayHits / todayTotal * 100).toFixed(1) : '-';
+      document.getElementById('today-stats').innerHTML = todayTotal > 0
+        ? `${todayHits}/${todayTotal} <span class="text-sm text-amber-400">(${todayPercent}%)</span>`
+        : '<span class="text-slate-500">データなし</span>';
+
+      // 今週
+      const weekItems = DUMMY_WEEKLY.filter(w => w.result !== null);
+      const weekHits = weekItems.filter(w => w.hit).length;
+      const weekTotal = weekItems.length;
+      const weekPercent = weekTotal > 0 ? (weekHits / weekTotal * 100).toFixed(1) : '-';
+      document.getElementById('week-stats').innerHTML = weekTotal > 0
+        ? `${weekHits}/${weekTotal} <span class="text-sm text-amber-400">(${weekPercent}%)</span>`
+        : '<span class="text-slate-500">データなし</span>';
+    }
+  </script>
+</body>
+</html>

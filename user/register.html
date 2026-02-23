@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新規登録 - BOAT PREDICTOR</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { dark: { 900: '#0a0e1a', 800: '#111827', 700: '#1e293b' } } } }
+    }
+  </script>
+</head>
+<body class="bg-[#0a0e1a] text-slate-100 min-h-screen flex flex-col">
+
+  <div id="app-header"></div>
+
+  <main class="flex-1 flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-lg">
+
+      <!-- プログレスバー -->
+      <div class="mb-8">
+        <div class="flex items-center justify-between">
+          <div id="step-ind-1" class="flex flex-col items-center">
+            <div class="w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center font-bold text-sm">1</div>
+            <span class="text-xs mt-1 text-sky-400">選択</span>
+          </div>
+          <div class="flex-1 h-0.5 bg-slate-700 mx-2" id="line-1-2"></div>
+          <div id="step-ind-2" class="flex flex-col items-center">
+            <div class="w-10 h-10 rounded-full bg-slate-700 text-slate-400 flex items-center justify-center font-bold text-sm">2</div>
+            <span class="text-xs mt-1 text-slate-500">認証</span>
+          </div>
+          <div class="flex-1 h-0.5 bg-slate-700 mx-2" id="line-2-3"></div>
+          <div id="step-ind-3" class="flex flex-col items-center">
+            <div class="w-10 h-10 rounded-full bg-slate-700 text-slate-400 flex items-center justify-center font-bold text-sm">3</div>
+            <span class="text-xs mt-1 text-slate-500">決済</span>
+          </div>
+          <div class="flex-1 h-0.5 bg-slate-700 mx-2" id="line-3-4"></div>
+          <div id="step-ind-4" class="flex flex-col items-center">
+            <div class="w-10 h-10 rounded-full bg-slate-700 text-slate-400 flex items-center justify-center font-bold text-sm">4</div>
+            <span class="text-xs mt-1 text-slate-500">完了</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ステップ1: 登録方法選択 -->
+      <section id="step-1">
+        <h2 class="text-xl font-bold text-white mb-6 text-center">登録方法を選択</h2>
+        <div class="space-y-4">
+          <!-- LINE登録 -->
+          <div class="bg-gray-900 border-2 border-slate-700 rounded-xl p-6 hover:border-green-500/50 transition cursor-pointer group" onclick="selectMethod('line')">
+            <div class="flex items-center gap-4 mb-3">
+              <div class="w-12 h-12 rounded-xl bg-[#06C755]/10 flex items-center justify-center">
+                <i class="fa-brands fa-line text-[#06C755] text-2xl"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-white">LINE で登録</h3>
+                <p class="text-sm text-slate-400">LINEアカウントで簡単に登録</p>
+              </div>
+            </div>
+            <p class="text-xs text-slate-500 mb-4">LINE連携 → お支払い → ID/パスワード自動発行</p>
+            <button class="w-full bg-[#06C755] hover:bg-[#05b34c] text-white font-bold py-3 px-6 rounded-xl transition-all group-hover:shadow-lg group-hover:shadow-green-500/20">
+              <i class="fa-brands fa-line mr-2"></i>LINEで登録する
+            </button>
+          </div>
+
+          <!-- SNS登録 -->
+          <div class="bg-gray-900 border-2 border-slate-700 rounded-xl p-6 hover:border-sky-500/50 transition cursor-pointer group" onclick="selectMethod('sns')">
+            <div class="flex items-center gap-4 mb-3">
+              <div class="w-12 h-12 rounded-xl bg-sky-500/10 flex items-center justify-center">
+                <i class="fa-solid fa-globe text-sky-500 text-2xl"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-white">SNS で登録</h3>
+                <p class="text-sm text-slate-400">Google / X(旧Twitter) で登録</p>
+              </div>
+            </div>
+            <p class="text-xs text-slate-500 mb-4">SNS認証 → お支払い → 確認メール送信</p>
+            <button class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-6 rounded-xl transition-all group-hover:shadow-lg group-hover:shadow-sky-500/20">
+              <i class="fa-solid fa-globe mr-2"></i>SNSで登録する
+            </button>
+          </div>
+        </div>
+
+        <div class="mt-6 text-center">
+          <a href="login.html" class="text-sm text-slate-500 hover:text-slate-300 transition">
+            <i class="fa-solid fa-arrow-left mr-1"></i>ログイン画面へ戻る
+          </a>
+        </div>
+      </section>
+
+      <!-- ステップ2: 認証 (LINE) -->
+      <section id="step-2-line" class="hidden">
+        <h2 class="text-xl font-bold text-white mb-6 text-center">LINE 連携</h2>
+        <div class="bg-gray-900 border border-slate-700 rounded-xl p-6">
+          <!-- 連携前 -->
+          <div id="line-auth-before">
+            <div class="text-center mb-6">
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#06C755]/10 mb-4">
+                <i class="fa-brands fa-line text-[#06C755] text-4xl"></i>
+              </div>
+              <p class="text-slate-300">LINEアプリが開きます。<br>認証を許可してください。</p>
+            </div>
+            <button onclick="simulateLineAuth()" class="w-full bg-[#06C755] hover:bg-[#05b34c] text-white font-bold py-3 px-6 rounded-xl transition">
+              <i class="fa-brands fa-line mr-2"></i>LINE認証画面へ
+            </button>
+          </div>
+          <!-- 連携後 -->
+          <div id="line-auth-after" class="hidden">
+            <div class="text-center mb-6">
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-green-500/10 mb-4">
+                <i class="fa-solid fa-circle-check text-green-500 text-4xl"></i>
+              </div>
+              <h3 class="text-lg font-bold text-green-400 mb-2">LINE連携完了</h3>
+              <div class="bg-slate-800 rounded-lg p-4 text-left">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full bg-[#06C755]/20 flex items-center justify-center">
+                    <i class="fa-solid fa-user text-[#06C755]"></i>
+                  </div>
+                  <div>
+                    <p class="text-white font-medium">山田 太郎</p>
+                    <p class="text-xs text-slate-400">LINE ID: yamada_taro</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button onclick="goToStep(3)" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-6 rounded-xl transition">
+              次へ進む <i class="fa-solid fa-arrow-right ml-2"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ステップ2: 認証 (SNS) -->
+      <section id="step-2-sns" class="hidden">
+        <h2 class="text-xl font-bold text-white mb-6 text-center">SNS 認証</h2>
+        <div class="bg-gray-900 border border-slate-700 rounded-xl p-6">
+          <!-- 認証選択 -->
+          <div id="sns-auth-before">
+            <p class="text-slate-400 text-center mb-6">認証に使用するアカウントを選択</p>
+            <div class="space-y-3">
+              <button onclick="simulateSnsAuth('Google')" class="w-full flex items-center gap-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-xl px-4 py-3 transition">
+                <i class="fa-brands fa-google text-xl text-white"></i>
+                <span class="text-white font-medium">Google で認証</span>
+              </button>
+              <button onclick="simulateSnsAuth('X')" class="w-full flex items-center gap-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-xl px-4 py-3 transition">
+                <i class="fa-brands fa-x-twitter text-xl text-white"></i>
+                <span class="text-white font-medium">X (旧Twitter) で認証</span>
+              </button>
+            </div>
+          </div>
+          <!-- 認証後 -->
+          <div id="sns-auth-after" class="hidden">
+            <div class="text-center mb-6">
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-green-500/10 mb-4">
+                <i class="fa-solid fa-circle-check text-green-500 text-4xl"></i>
+              </div>
+              <h3 class="text-lg font-bold text-green-400 mb-2" id="sns-auth-title">認証完了</h3>
+              <div class="bg-slate-800 rounded-lg p-4 text-left">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full bg-sky-500/20 flex items-center justify-center">
+                    <i class="fa-solid fa-user text-sky-500"></i>
+                  </div>
+                  <div>
+                    <p class="text-white font-medium" id="sns-auth-name">山田 太郎</p>
+                    <p class="text-xs text-slate-400" id="sns-auth-email">yamada@gmail.com</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button onclick="goToStep(3)" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-6 rounded-xl transition">
+              次へ進む <i class="fa-solid fa-arrow-right ml-2"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ステップ3: Stripe決済 -->
+      <section id="step-3" class="hidden">
+        <h2 class="text-xl font-bold text-white mb-6 text-center">お支払い</h2>
+        <div class="bg-gray-900 border border-slate-700 rounded-xl p-6">
+          <!-- プラン情報 -->
+          <div class="bg-slate-800 rounded-lg p-4 mb-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-slate-400 text-sm">プラン</p>
+                <p class="text-white font-bold">月額プラン</p>
+              </div>
+              <div class="text-right">
+                <p class="text-2xl font-bold text-white">&yen;3,980</p>
+                <p class="text-xs text-slate-400">/月 (税込)</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- カードフォーム (モック) -->
+          <div class="space-y-4 mb-6">
+            <div>
+              <label class="block text-sm font-medium text-slate-300 mb-2">
+                <i class="fa-solid fa-credit-card mr-1 text-slate-500"></i>カード番号
+              </label>
+              <input type="text" placeholder="1234 5678 9012 3456" maxlength="19"
+                class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition font-mono">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-slate-300 mb-2">有効期限</label>
+                <input type="text" placeholder="MM/YY" maxlength="5"
+                  class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition font-mono">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-300 mb-2">CVC</label>
+                <input type="text" placeholder="123" maxlength="4"
+                  class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition font-mono">
+              </div>
+            </div>
+          </div>
+
+          <button onclick="simulatePayment()" id="pay-btn"
+            class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3.5 px-6 rounded-xl transition-all hover:shadow-lg hover:shadow-sky-500/25">
+            <i class="fa-solid fa-lock mr-2"></i>決済する
+          </button>
+
+          <div class="mt-4 text-center flex items-center justify-center gap-2 text-slate-500 text-xs">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>SSL暗号化で安全に処理されます</span>
+            <span class="mx-1">|</span>
+            <span>Powered by Stripe</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ステップ4: 完了 -->
+      <section id="step-4" class="hidden">
+        <div class="text-center">
+          <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-green-500/10 mb-6">
+            <i class="fa-solid fa-circle-check text-green-500 text-5xl"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-green-400 mb-2">登録完了!</h2>
+          <p class="text-slate-400 mb-8">ご登録ありがとうございます</p>
+        </div>
+
+        <!-- LINE登録完了 -->
+        <div id="complete-line" class="hidden">
+          <div class="bg-gray-900 border border-slate-700 rounded-xl p-6 mb-6">
+            <h3 class="text-lg font-bold text-white mb-4">
+              <i class="fa-solid fa-key mr-2 text-amber-400"></i>ログイン情報
+            </h3>
+            <p class="text-sm text-slate-400 mb-4">以下のID/パスワードが自動発行されました。大切に保管してください。</p>
+            <div class="space-y-3">
+              <div class="bg-slate-800 rounded-lg p-3 flex items-center justify-between">
+                <div>
+                  <p class="text-xs text-slate-400">ユーザーID</p>
+                  <p class="text-white font-mono font-bold">user_yamada_t123</p>
+                </div>
+                <button onclick="copyText('user_yamada_t123')" class="text-slate-400 hover:text-white transition p-2">
+                  <i class="fa-solid fa-copy"></i>
+                </button>
+              </div>
+              <div class="bg-slate-800 rounded-lg p-3 flex items-center justify-between">
+                <div>
+                  <p class="text-xs text-slate-400">パスワード</p>
+                  <p class="text-white font-mono font-bold">Bp#xK9mR2v</p>
+                </div>
+                <button onclick="copyText('Bp#xK9mR2v')" class="text-slate-400 hover:text-white transition p-2">
+                  <i class="fa-solid fa-copy"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SNS登録完了 -->
+        <div id="complete-sns" class="hidden">
+          <div class="bg-gray-900 border border-slate-700 rounded-xl p-6 mb-6">
+            <h3 class="text-lg font-bold text-white mb-4">
+              <i class="fa-solid fa-envelope mr-2 text-sky-400"></i>確認メール送信
+            </h3>
+            <p class="text-slate-300 mb-2">以下のメールアドレスに確認メールを送信しました。</p>
+            <div class="bg-slate-800 rounded-lg p-3">
+              <p class="text-white font-mono">yamada@gmail.com</p>
+            </div>
+            <p class="text-sm text-slate-400 mt-3">メール内のリンクをクリックして登録を完了してください。</p>
+          </div>
+        </div>
+
+        <a href="predict.html"
+          class="block w-full text-center bg-sky-500 hover:bg-sky-600 text-white font-bold py-3.5 px-6 rounded-xl transition-all hover:shadow-lg hover:shadow-sky-500/25">
+          <i class="fa-solid fa-chart-line mr-2"></i>予測画面へ
+        </a>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="../shared/header.js"></script>
+  <script>
+    let currentStep = 1;
+    let registrationMethod = '';
+
+    function selectMethod(method) {
+      registrationMethod = method;
+      goToStep(2);
+    }
+
+    function goToStep(step) {
+      currentStep = step;
+      // 全ステップ非表示
+      document.querySelectorAll('main section').forEach(s => s.classList.add('hidden'));
+
+      if (step === 2) {
+        document.getElementById(registrationMethod === 'line' ? 'step-2-line' : 'step-2-sns').classList.remove('hidden');
+      } else if (step === 4) {
+        document.getElementById('step-4').classList.remove('hidden');
+        document.getElementById(registrationMethod === 'line' ? 'complete-line' : 'complete-sns').classList.remove('hidden');
+      } else {
+        document.getElementById('step-' + step).classList.remove('hidden');
+      }
+
+      updateProgressBar(step);
+    }
+
+    function updateProgressBar(step) {
+      for (let i = 1; i <= 4; i++) {
+        const ind = document.getElementById('step-ind-' + i);
+        const circle = ind.querySelector('div');
+        const label = ind.querySelector('span');
+        if (i < step) {
+          circle.className = 'w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-sm';
+          circle.innerHTML = '<i class="fa-solid fa-check"></i>';
+          label.className = 'text-xs mt-1 text-green-400';
+        } else if (i === step) {
+          circle.className = 'w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center font-bold text-sm';
+          circle.textContent = i;
+          label.className = 'text-xs mt-1 text-sky-400';
+        } else {
+          circle.className = 'w-10 h-10 rounded-full bg-slate-700 text-slate-400 flex items-center justify-center font-bold text-sm';
+          circle.textContent = i;
+          label.className = 'text-xs mt-1 text-slate-500';
+        }
+      }
+      // 線の色
+      for (let i = 1; i <= 3; i++) {
+        const line = document.getElementById('line-' + i + '-' + (i + 1));
+        if (line) line.className = i < step ? 'flex-1 h-0.5 bg-green-500 mx-2 transition-all' : 'flex-1 h-0.5 bg-slate-700 mx-2 transition-all';
+      }
+    }
+
+    function simulateLineAuth() {
+      const before = document.getElementById('line-auth-before');
+      const after = document.getElementById('line-auth-after');
+      before.innerHTML = '<div class="text-center py-4"><i class="fa-solid fa-spinner fa-spin text-3xl text-[#06C755] mb-3"></i><p class="text-slate-400">LINE認証中...</p></div>';
+      setTimeout(() => {
+        before.classList.add('hidden');
+        after.classList.remove('hidden');
+      }, 1500);
+    }
+
+    function simulateSnsAuth(provider) {
+      const before = document.getElementById('sns-auth-before');
+      const after = document.getElementById('sns-auth-after');
+      before.innerHTML = `<div class="text-center py-4"><i class="fa-solid fa-spinner fa-spin text-3xl text-sky-500 mb-3"></i><p class="text-slate-400">${provider} 認証中...</p></div>`;
+      setTimeout(() => {
+        document.getElementById('sns-auth-title').textContent = provider + ' 認証完了';
+        before.classList.add('hidden');
+        after.classList.remove('hidden');
+      }, 1500);
+    }
+
+    function simulatePayment() {
+      const btn = document.getElementById('pay-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>処理中...';
+      btn.className = 'w-full bg-slate-600 text-slate-300 font-bold py-3.5 px-6 rounded-xl cursor-not-allowed';
+      setTimeout(() => {
+        goToStep(4);
+      }, 2000);
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text).catch(() => {});
+    }
+  </script>
+</body>
+</html>
