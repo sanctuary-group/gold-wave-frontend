@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ダッシュボード - BOAT PREDICTOR ADMIN</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../shared/tailwind-config.js"></script>
+  <link rel="stylesheet" href="../shared/premium.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <script>
-    tailwind.config = {
-      theme: { extend: { colors: { dark: { 900: '#0a0e1a', 800: '#111827', 700: '#1e293b' } } } }
-    }
-  </script>
 </head>
-<body class="bg-[#0a0e1a] text-slate-100 min-h-screen flex flex-col">
+<body class="bg-dark text-charcoal font-body min-h-screen flex flex-col bg-pattern-subtle">
 
   <div id="app-header"></div>
 
@@ -20,68 +20,68 @@
 
     <!-- ページヘッダー -->
     <div class="mb-6">
-      <h1 class="text-2xl font-bold text-white">
-        <i class="fa-solid fa-gauge-high text-amber-500 mr-2"></i>ダッシュボード
+      <h1 class="text-3xl sm:text-4xl font-heading font-semibold tracking-tight text-charcoal">
+        <i class="fa-solid fa-gauge-high text-gold-shine mr-2"></i>ダッシュボード
       </h1>
     </div>
 
     <!-- サマリーカード -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      <div class="bg-gray-900 rounded-xl border border-slate-700/50 p-5">
+      <div class="card-premium p-6">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-sky-500/10 flex items-center justify-center">
-            <i class="fa-solid fa-users text-sky-500"></i>
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-b from-gold/12 to-gold/4 flex items-center justify-center">
+            <i class="fa-solid fa-users text-gold-shine"></i>
           </div>
           <div>
-            <p class="text-xs text-slate-400">総ユーザー</p>
-            <p class="text-2xl font-bold text-white" id="total-users">0</p>
+            <p class="text-xs text-warm-gray">総ユーザー</p>
+            <p class="text-2xl font-bold text-charcoal" id="total-users">0</p>
           </div>
         </div>
       </div>
-      <div class="bg-gray-900 rounded-xl border border-slate-700/50 p-5">
+      <div class="card-premium p-6">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
-            <i class="fa-brands fa-line text-green-500"></i>
+          <div class="w-11 h-11 rounded-xl bg-status-success-bg flex items-center justify-center">
+            <i class="fa-brands fa-line text-[#06C755]"></i>
           </div>
           <div>
-            <p class="text-xs text-slate-400">LINE登録</p>
-            <p class="text-2xl font-bold text-white" id="line-users">0</p>
+            <p class="text-xs text-warm-gray">LINE登録</p>
+            <p class="text-2xl font-bold text-charcoal" id="line-users">0</p>
           </div>
         </div>
       </div>
-      <div class="bg-gray-900 rounded-xl border border-slate-700/50 p-5">
+      <div class="card-premium p-6">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
-            <i class="fa-solid fa-share-nodes text-purple-500"></i>
+          <div class="w-11 h-11 rounded-xl bg-status-purple-bg flex items-center justify-center">
+            <i class="fa-solid fa-share-nodes text-status-purple"></i>
           </div>
           <div>
-            <p class="text-xs text-slate-400">SNS登録</p>
-            <p class="text-2xl font-bold text-white" id="sns-users">0</p>
+            <p class="text-xs text-warm-gray">SNS登録</p>
+            <p class="text-2xl font-bold text-charcoal" id="sns-users">0</p>
           </div>
         </div>
       </div>
-      <div class="bg-gray-900 rounded-xl border border-slate-700/50 p-5">
+      <div class="card-premium p-6">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
-            <i class="fa-solid fa-credit-card text-amber-500"></i>
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-b from-gold/12 to-gold/4 flex items-center justify-center">
+            <i class="fa-solid fa-credit-card text-gold-shine"></i>
           </div>
           <div>
-            <p class="text-xs text-slate-400">決済完了</p>
-            <p class="text-2xl font-bold text-white" id="paid-users">0</p>
+            <p class="text-xs text-warm-gray">決済完了</p>
+            <p class="text-2xl font-bold text-charcoal" id="paid-users">0</p>
           </div>
         </div>
       </div>
     </div>
 
     <!-- タブ切替 -->
-    <div class="border-b border-slate-700 mb-6">
+    <div class="mb-8" style="border-bottom: 1px solid var(--border-gold-accent)">
       <div class="flex gap-0">
         <button id="tab-users" onclick="switchTab('users')"
-          class="px-6 py-3 text-sm font-medium border-b-2 border-sky-500 text-sky-400 transition">
+          class="px-6 py-3.5 text-sm font-semibold border-b-2 border-gold text-gold transition-all duration-600">
           <i class="fa-solid fa-users mr-2"></i>ユーザー管理
         </button>
         <button id="tab-logics" onclick="switchTab('logics')"
-          class="px-6 py-3 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-300 transition">
+          class="px-6 py-3.5 text-sm font-medium border-b-2 border-transparent text-warm-gray/70 hover:text-charcoal transition-all duration-400">
           <i class="fa-solid fa-brain mr-2"></i>ロジック管理
         </button>
       </div>
@@ -93,20 +93,20 @@
       <div class="flex flex-wrap gap-3 mb-4">
         <div class="flex-1 min-w-[200px]">
           <div class="relative">
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"></i>
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-warm-gray"></i>
             <input type="text" placeholder="名前やメールで検索..." id="user-search"
               oninput="filterUsers()"
-              class="w-full bg-slate-800 border border-slate-600 rounded-lg pl-10 pr-4 py-2.5 text-white text-sm placeholder-slate-500 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition">
+              class="input-premium pl-10">
           </div>
         </div>
         <select id="filter-method" onchange="filterUsers()"
-          class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2.5 text-white text-sm focus:border-sky-500 focus:outline-none transition">
+          class="input-premium">
           <option value="all">登録方法: 全て</option>
           <option value="LINE">LINE</option>
           <option value="SNS">SNS</option>
         </select>
         <select id="filter-status" onchange="filterUsers()"
-          class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2.5 text-white text-sm focus:border-sky-500 focus:outline-none transition">
+          class="input-premium">
           <option value="all">ステータス: 全て</option>
           <option value="有効">有効</option>
           <option value="停止">停止</option>
@@ -115,19 +115,19 @@
       </div>
 
       <!-- ユーザーテーブル -->
-      <div class="bg-gray-900 rounded-xl border border-slate-700/50 overflow-hidden">
+      <div class="card-premium-static overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="w-full min-w-[700px]">
+          <table class="table-premium min-w-[700px]">
             <thead>
-              <tr class="bg-slate-800/50">
-                <th class="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase">ID</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase">名前</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase">メール</th>
-                <th class="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase">登録方法</th>
-                <th class="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase">ステータス</th>
-                <th class="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase">決済</th>
-                <th class="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase">登録日</th>
-                <th class="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase">操作</th>
+              <tr>
+                <th class="text-left">ID</th>
+                <th class="text-left">名前</th>
+                <th class="text-left">メール</th>
+                <th class="text-center">登録方法</th>
+                <th class="text-center">ステータス</th>
+                <th class="text-center">決済</th>
+                <th class="text-center">登録日</th>
+                <th class="text-center">操作</th>
               </tr>
             </thead>
             <tbody id="users-table-body">
@@ -138,14 +138,14 @@
 
       <!-- ページネーション -->
       <div class="flex items-center justify-between mt-4">
-        <p class="text-sm text-slate-400" id="user-count"></p>
+        <p class="text-sm text-warm-gray" id="user-count"></p>
         <div class="flex items-center gap-1">
-          <button class="px-3 py-1.5 rounded-lg text-sm bg-slate-800 text-slate-400 hover:bg-slate-700 transition">
+          <button class="px-3.5 py-2 rounded-lg text-sm font-medium text-warm-gray hover:bg-dark-surface transition-all duration-400">
             <i class="fa-solid fa-chevron-left"></i>
           </button>
-          <button class="px-3 py-1.5 rounded-lg text-sm bg-sky-500 text-white">1</button>
-          <button class="px-3 py-1.5 rounded-lg text-sm bg-slate-800 text-slate-400 hover:bg-slate-700 transition">2</button>
-          <button class="px-3 py-1.5 rounded-lg text-sm bg-slate-800 text-slate-400 hover:bg-slate-700 transition">
+          <button class="px-3.5 py-2 rounded-lg text-sm font-semibold bg-gold text-charcoal shadow-elevation-1">1</button>
+          <button class="px-3.5 py-2 rounded-lg text-sm font-medium text-warm-gray hover:bg-dark-surface transition-all duration-400">2</button>
+          <button class="px-3.5 py-2 rounded-lg text-sm font-medium text-warm-gray hover:bg-dark-surface transition-all duration-400">
             <i class="fa-solid fa-chevron-right"></i>
           </button>
         </div>
@@ -160,8 +160,8 @@
 
         <!-- 新規追加ボタン -->
         <button onclick="openLogicModal()"
-          class="w-full border-2 border-dashed border-slate-600 rounded-xl p-6 text-center hover:border-sky-500 hover:text-sky-400 text-slate-400 transition group">
-          <i class="fa-solid fa-plus text-2xl mb-2 group-hover:text-sky-500 transition"></i>
+          class="w-full border-2 border-dashed border-warm-border/60 rounded-2xl p-8 text-center hover:border-gold/40 text-warm-gray/60 hover:text-gold transition-all duration-600 group">
+          <i class="fa-solid fa-plus text-2xl mb-2 group-hover:text-gold transition"></i>
           <p class="font-medium">新規ロジック追加</p>
         </button>
       </div>
@@ -171,70 +171,97 @@
 
   <!-- ロジック追加モーダル -->
   <div id="logic-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeLogicModal()"></div>
-    <div class="relative bg-gray-900 rounded-2xl border border-slate-700 p-6 sm:p-8 w-full max-w-lg shadow-2xl">
+    <div class="absolute inset-0 bg-charcoal/30 backdrop-blur-md" onclick="closeLogicModal()"></div>
+    <div class="relative bg-card rounded-3xl p-7 sm:p-9 w-full max-w-lg shadow-elevation-4 animate-scale-in">
       <div class="flex items-center justify-between mb-6">
-        <h3 class="text-lg font-bold text-white">
-          <i class="fa-solid fa-brain text-sky-500 mr-2"></i>新規ロジック追加
+        <h3 class="text-lg font-bold text-charcoal">
+          <i class="fa-solid fa-brain text-gold-shine mr-2"></i>新規ロジック追加
         </h3>
-        <button onclick="closeLogicModal()" class="text-slate-400 hover:text-white transition">
+        <button onclick="closeLogicModal()" class="text-warm-gray hover:text-charcoal transition">
           <i class="fa-solid fa-xmark text-xl"></i>
         </button>
       </div>
 
       <form onsubmit="handleLogicSubmit(event)" class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-slate-300 mb-1">ロジック名</label>
+          <label class="block text-sm font-medium text-warm-text mb-1">ロジック名</label>
           <input type="text" placeholder="例: ロジックD"
-            class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-2.5 text-white text-sm placeholder-slate-500 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition">
+            class="input-premium">
         </div>
         <div>
-          <label class="block text-sm font-medium text-slate-300 mb-1">説明</label>
+          <label class="block text-sm font-medium text-warm-text mb-1">説明</label>
           <textarea rows="2" placeholder="ロジックの説明を入力"
-            class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-2.5 text-white text-sm placeholder-slate-500 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition resize-none"></textarea>
+            class="input-premium resize-none"></textarea>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-slate-300 mb-3">パラメータ重み設定</label>
+          <label class="block text-sm font-medium text-warm-text mb-3">パラメータ重み設定</label>
           <div class="space-y-3">
             <div class="flex items-center justify-between">
-              <span class="text-sm text-slate-400">勝率重み</span>
+              <span class="text-sm text-warm-gray">勝率重み</span>
               <div class="flex items-center gap-2">
-                <input type="range" min="0" max="100" value="80" class="w-32 accent-sky-500">
-                <span class="text-sm font-mono text-white w-12 text-right">0.80</span>
+                <input type="range" min="0" max="100" value="80" class="w-32">
+                <span class="text-sm font-mono text-charcoal w-12 text-right">0.80</span>
               </div>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-sm text-slate-400">モーター重み</span>
+              <span class="text-sm text-warm-gray">モーター重み</span>
               <div class="flex items-center gap-2">
-                <input type="range" min="0" max="100" value="50" class="w-32 accent-sky-500">
-                <span class="text-sm font-mono text-white w-12 text-right">0.50</span>
+                <input type="range" min="0" max="100" value="50" class="w-32">
+                <span class="text-sm font-mono text-charcoal w-12 text-right">0.50</span>
               </div>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-sm text-slate-400">STタイミング重み</span>
+              <span class="text-sm text-warm-gray">STタイミング重み</span>
               <div class="flex items-center gap-2">
-                <input type="range" min="0" max="100" value="30" class="w-32 accent-sky-500">
-                <span class="text-sm font-mono text-white w-12 text-right">0.30</span>
+                <input type="range" min="0" max="100" value="30" class="w-32">
+                <span class="text-sm font-mono text-charcoal w-12 text-right">0.30</span>
               </div>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-sm text-slate-400">展示タイム重み</span>
+              <span class="text-sm text-warm-gray">展示タイム重み</span>
               <div class="flex items-center gap-2">
-                <input type="range" min="0" max="100" value="40" class="w-32 accent-sky-500">
-                <span class="text-sm font-mono text-white w-12 text-right">0.40</span>
+                <input type="range" min="0" max="100" value="40" class="w-32">
+                <span class="text-sm font-mono text-charcoal w-12 text-right">0.40</span>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- API接続情報 -->
+        <div class="pt-2" style="border-top: 1px solid var(--border-gold-accent)">
+          <label class="block text-sm font-medium text-warm-text mb-3">
+            <i class="fa-solid fa-key text-gold-shine mr-1"></i>API接続情報
+          </label>
+          <div class="space-y-3">
+            <div>
+              <span class="block text-xs text-warm-gray mb-1">APIキー</span>
+              <div class="flex items-center gap-2">
+                <div class="flex-1 input-premium text-sm font-mono bg-dark-surface/50 truncate cursor-default" id="modal-api-key">
+                  <span id="modal-api-key-display">sk-bp-••••••••••••••••</span>
+                  <span id="modal-api-key-full" class="hidden">sk-bp-x9y8z7w6v5u4t3s2</span>
+                </div>
+                <button type="button" onclick="toggleModalApiKey()" class="btn-ghost px-3 py-2 text-warm-gray hover:text-charcoal" title="表示/非表示">
+                  <i class="fa-solid fa-eye text-sm" id="modal-api-key-eye"></i>
+                </button>
+                <button type="button" onclick="copyApiKey()" class="btn-ghost px-3 py-2 text-gold" title="コピー">
+                  <i class="fa-regular fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            <div id="copy-notification" class="hidden rounded-xl px-4 py-2 text-sm bg-status-success-bg text-status-success text-center">
+              <i class="fa-solid fa-check mr-1"></i>クリップボードにコピーしました
             </div>
           </div>
         </div>
 
         <div class="flex gap-3 pt-2">
           <button type="button" onclick="closeLogicModal()"
-            class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-medium py-2.5 px-4 rounded-xl transition">
+            class="btn-ghost flex-1 py-2.5">
             キャンセル
           </button>
           <button type="submit"
-            class="flex-1 bg-sky-500 hover:bg-sky-600 text-white font-medium py-2.5 px-4 rounded-xl transition">
+            class="btn-primary flex-1 py-2.5">
             <i class="fa-solid fa-save mr-1"></i>保存
           </button>
         </div>
@@ -266,8 +293,8 @@
       const tabs = ['users', 'logics'];
       tabs.forEach(t => {
         document.getElementById('tab-' + t).className = t === tab
-          ? 'px-6 py-3 text-sm font-medium border-b-2 border-sky-500 text-sky-400 transition'
-          : 'px-6 py-3 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-300 transition';
+          ? 'px-6 py-3.5 text-sm font-semibold border-b-2 border-gold text-gold transition-all duration-600'
+          : 'px-6 py-3.5 text-sm font-medium border-b-2 border-transparent text-warm-gray/70 hover:text-charcoal transition-all duration-400';
         document.getElementById('panel-' + t).classList.toggle('hidden', t !== tab);
       });
     }
@@ -277,19 +304,19 @@
       const tbody = document.getElementById('users-table-body');
       tbody.innerHTML = users.map(user => {
         const methodIcon = user.method === 'LINE'
-          ? '<i class="fa-brands fa-line text-green-500 mr-1"></i>'
-          : '<i class="fa-solid fa-share-nodes text-purple-500 mr-1"></i>';
+          ? '<i class="fa-brands fa-line text-[#06C755] mr-1"></i>'
+          : '<i class="fa-solid fa-share-nodes text-status-purple mr-1"></i>';
         return `
-          <tr class="border-b border-slate-700/50 hover:bg-slate-800/30 transition">
-            <td class="px-4 py-3 text-sm text-slate-400 font-mono">${user.id}</td>
-            <td class="px-4 py-3 text-white font-medium">${user.name}</td>
-            <td class="px-4 py-3 text-sm text-slate-300">${user.email}</td>
+          <tr class="transition-all duration-400">
+            <td class="px-4 py-3 text-sm text-warm-gray font-mono">${user.id}</td>
+            <td class="px-4 py-3 text-charcoal font-medium">${user.name}</td>
+            <td class="px-4 py-3 text-sm text-warm-text">${user.email}</td>
             <td class="px-4 py-3 text-center text-sm">${methodIcon}${user.method}</td>
             <td class="px-4 py-3 text-center">${getStatusBadge(user.status)}</td>
             <td class="px-4 py-3 text-center">${getStatusBadge(user.payment)}</td>
-            <td class="px-4 py-3 text-center text-sm text-slate-400">${user.registered}</td>
+            <td class="px-4 py-3 text-center text-sm text-warm-gray">${user.registered}</td>
             <td class="px-4 py-3 text-center">
-              <button class="text-slate-400 hover:text-white transition p-1" title="詳細">
+              <button class="text-warm-gray hover:text-charcoal transition p-1" title="詳細">
                 <i class="fa-solid fa-ellipsis-vertical"></i>
               </button>
             </td>
@@ -323,30 +350,30 @@
     function renderLogicList() {
       const container = document.getElementById('logic-list');
       container.innerHTML = DUMMY_LOGICS.map(logic => `
-        <div class="bg-gray-900 rounded-xl border border-slate-700/50 p-5">
+        <div class="card-premium-static p-6">
           <div class="flex flex-wrap items-start justify-between gap-3 mb-3">
             <div>
               <div class="flex items-center gap-2 mb-1">
-                <h3 class="text-lg font-bold text-white">${logic.name}</h3>
+                <h3 class="text-lg font-bold text-charcoal">${logic.name}</h3>
                 ${getStatusBadge(logic.status)}
               </div>
-              <p class="text-sm text-slate-400">${logic.description}</p>
+              <p class="text-sm text-warm-gray">${logic.description}</p>
             </div>
             <div class="flex gap-2">
-              <button class="px-3 py-1.5 rounded-lg text-sm bg-slate-800 text-sky-400 hover:bg-sky-500/10 transition">
+              <button class="btn-ghost text-sm text-gold">
                 <i class="fa-solid fa-pen-to-square mr-1"></i>編集
               </button>
-              <button class="px-3 py-1.5 rounded-lg text-sm bg-slate-800 text-red-400 hover:bg-red-500/10 transition">
+              <button class="btn-ghost text-sm text-status-error">
                 <i class="fa-solid fa-ban mr-1"></i>無効化
               </button>
             </div>
           </div>
           <div class="flex items-center gap-3">
-            <span class="text-xs text-slate-500">的中率</span>
-            <div class="flex-1 bg-slate-700 rounded-full h-2">
-              <div class="bg-amber-400 h-2 rounded-full" style="width: ${logic.accuracy}%"></div>
+            <span class="text-xs text-warm-gray">的中率</span>
+            <div class="flex-1 bg-dark-surface rounded-full h-1.5">
+              <div class="bg-gold h-1.5 rounded-full" style="width: ${logic.accuracy}%"></div>
             </div>
-            <span class="text-sm font-mono font-bold text-amber-400">${logic.accuracy}%</span>
+            <span class="text-sm font-mono font-bold text-gold-warm">${logic.accuracy}%</span>
           </div>
         </div>
       `).join('');
@@ -374,6 +401,43 @@
           display.textContent = (slider.value / 100).toFixed(2);
         });
       });
+    }
+
+    // APIキー表示/非表示
+    function toggleModalApiKey() {
+      const display = document.getElementById('modal-api-key-display');
+      const full = document.getElementById('modal-api-key-full');
+      const icon = document.getElementById('modal-api-key-eye');
+      if (full.classList.contains('hidden')) {
+        full.classList.remove('hidden');
+        display.classList.add('hidden');
+        icon.className = 'fa-solid fa-eye-slash text-sm';
+      } else {
+        full.classList.add('hidden');
+        display.classList.remove('hidden');
+        icon.className = 'fa-solid fa-eye text-sm';
+      }
+    }
+
+    // テキストコピー
+    function copyToClipboard(elementId) {
+      const text = document.getElementById(elementId).textContent.trim();
+      navigator.clipboard.writeText(text);
+      showCopyNotification();
+    }
+
+    // APIキーコピー（常にフルキーをコピー）
+    function copyApiKey() {
+      const full = document.getElementById('modal-api-key-full').textContent.trim();
+      navigator.clipboard.writeText(full);
+      showCopyNotification();
+    }
+
+    // コピー通知表示
+    function showCopyNotification() {
+      const el = document.getElementById('copy-notification');
+      el.classList.remove('hidden');
+      setTimeout(() => el.classList.add('hidden'), 2000);
     }
   </script>
 </body>

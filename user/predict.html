@@ -4,71 +4,71 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>予測 - BOAT PREDICTOR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../shared/tailwind-config.js"></script>
+  <link rel="stylesheet" href="../shared/premium.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <script>
-    tailwind.config = {
-      theme: { extend: { colors: { dark: { 900: '#0a0e1a', 800: '#111827', 700: '#1e293b' } } } }
-    }
-  </script>
 </head>
-<body class="bg-[#0a0e1a] text-slate-100 min-h-screen flex flex-col">
+<body class="bg-dark text-charcoal font-body min-h-screen flex flex-col bg-pattern-subtle">
 
   <div id="app-header"></div>
 
   <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
 
     <!-- 条件選択エリア -->
-    <section class="bg-gray-900 rounded-xl border border-slate-700/50 p-4 sm:p-6 mb-6">
-      <h2 class="text-sm font-medium text-slate-400 mb-4">
+    <section class="card-premium-static p-5 sm:p-7 mb-8">
+      <h2 class="text-xs font-semibold uppercase tracking-widest text-warm-gray/80 mb-4">
         <i class="fa-solid fa-sliders mr-1"></i>レース選択
       </h2>
-      <div class="flex flex-wrap gap-3 items-end">
+      <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-3 items-end">
         <!-- 日付 -->
         <div>
-          <label class="block text-xs text-slate-500 mb-1">日付</label>
+          <label class="block text-xs text-warm-gray mb-1">日付</label>
           <input type="date" id="race-date" value="2026-02-23"
-            class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition">
+            class="input-premium text-sm w-full">
         </div>
         <!-- レース場 -->
         <div>
-          <label class="block text-xs text-slate-500 mb-1">レース場</label>
+          <label class="block text-xs text-warm-gray mb-1">レース場</label>
           <select id="race-stadium"
-            class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none transition min-w-[120px]">
+            class="input-premium text-sm w-full sm:min-w-[120px]">
           </select>
         </div>
         <!-- レース番号 -->
-        <div class="flex-1 min-w-0">
-          <label class="block text-xs text-slate-500 mb-1">レース</label>
-          <div class="flex flex-wrap gap-1.5" id="race-tabs">
+        <div class="col-span-2 sm:flex-1 sm:min-w-0">
+          <label class="block text-xs text-warm-gray mb-1">レース</label>
+          <div class="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide" id="race-tabs">
           </div>
         </div>
       </div>
     </section>
 
     <!-- 出走表 -->
-    <section class="bg-gray-900 rounded-xl border border-slate-700/50 mb-6 overflow-hidden">
-      <div class="px-4 sm:px-6 py-4 border-b border-slate-700/50 flex flex-wrap items-center justify-between gap-2">
+    <section class="card-gold-accent mb-8 overflow-hidden">
+      <div class="px-5 sm:px-7 py-5 flex flex-wrap items-center justify-between gap-2" style="border-bottom: 1px solid var(--border-gold-accent)">
         <div>
-          <h2 class="text-lg font-bold text-white" id="race-title">1R 江戸川グランプリ</h2>
-          <p class="text-sm text-slate-400" id="race-subtitle">予選 | 1800m</p>
+          <h2 class="text-xl font-heading font-semibold tracking-tight text-charcoal" id="race-title">1R 江戸川グランプリ</h2>
+          <p class="text-sm text-warm-gray" id="race-subtitle">予選 | 1800m</p>
         </div>
-        <span class="px-2.5 py-1 rounded-lg bg-sky-500/10 text-sky-400 text-xs font-medium">
+        <span class="badge-premium bg-status-warning-bg text-gold">
           <i class="fa-solid fa-table-list mr-1"></i>出走表
         </span>
       </div>
       <div class="overflow-x-auto">
-        <table class="w-full min-w-[640px]">
+        <table class="table-premium min-w-[640px]">
           <thead>
-            <tr class="bg-slate-800/50">
-              <th class="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">艇</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">選手名</th>
-              <th class="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase tracking-wider">級別</th>
-              <th class="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase tracking-wider">勝率</th>
-              <th class="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase tracking-wider">2連率</th>
-              <th class="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase tracking-wider">ST</th>
-              <th class="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase tracking-wider">モーター</th>
-              <th class="px-4 py-3 text-center text-xs font-medium text-slate-400 uppercase tracking-wider">ボート</th>
+            <tr>
+              <th class="text-left">艇</th>
+              <th class="text-left">選手名</th>
+              <th class="text-center">級別</th>
+              <th class="text-center">勝率</th>
+              <th class="text-center">2連率</th>
+              <th class="text-center">ST</th>
+              <th class="text-center">モーター</th>
+              <th class="text-center">ボート</th>
             </tr>
           </thead>
           <tbody id="race-table-body">
@@ -77,63 +77,39 @@
       </div>
     </section>
 
-    <!-- ロジック選択 -->
-    <section class="mb-6">
-      <h2 class="text-sm font-medium text-slate-400 mb-4">
-        <i class="fa-solid fa-brain mr-1"></i>予測ロジックを選択
+    <!-- ロジック予測カルーセル -->
+    <section class="mb-8">
+      <h2 class="text-xs font-semibold uppercase tracking-widest text-warm-gray/80 mb-4">
+        <i class="fa-solid fa-brain mr-1"></i>予測ロジック
       </h2>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="logic-cards">
-      </div>
-    </section>
-
-    <!-- 予測結果 -->
-    <section id="prediction-result" class="hidden mb-6 transition-all duration-500">
-      <div class="bg-gray-900 rounded-xl border border-sky-500/30 p-4 sm:p-6">
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
-          <h2 class="text-lg font-bold text-white">
-            <i class="fa-solid fa-crosshairs text-sky-500 mr-2"></i>予測結果
-          </h2>
-          <div class="flex items-center gap-2">
-            <span class="text-sm text-slate-400">信頼度</span>
-            <div class="w-32" id="confidence-bar"></div>
+      <div class="relative px-5 sm:px-8">
+        <!-- 左矢印 -->
+        <button onclick="prevSlide()" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 sm:-translate-x-5 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-dark-card/90 backdrop-blur-sm text-gold hover:text-cream hover:bg-dark-surface shadow-elevation-2 transition-all duration-400 flex items-center justify-center">
+          <i class="fa-solid fa-chevron-left text-lg"></i>
+        </button>
+        <!-- 右矢印 -->
+        <button onclick="nextSlide()" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 sm:translate-x-5 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-dark-card/90 backdrop-blur-sm text-gold hover:text-cream hover:bg-dark-surface shadow-elevation-2 transition-all duration-400 flex items-center justify-center">
+          <i class="fa-solid fa-chevron-right text-lg"></i>
+        </button>
+        <!-- カルーセル本体 -->
+        <div class="overflow-hidden rounded-2xl relative" id="carousel-viewport">
+          <div class="flex transition-transform duration-500 ease-premium" id="carousel-track">
+          </div>
+          <!-- スワイプヒント -->
+          <div id="swipe-hint" class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm rounded-2xl cursor-pointer transition-opacity duration-500" style="display:none;">
+            <div class="flex items-center gap-4 mb-3">
+              <i class="fa-solid fa-arrow-left text-white/80 text-xl animate-pulse-soft"></i>
+              <div class="w-14 h-14 rounded-full border-2 border-white/60 flex items-center justify-center">
+                <i class="fa-solid fa-hand-pointer text-white text-2xl"></i>
+              </div>
+              <i class="fa-solid fa-arrow-right text-white/80 text-xl animate-pulse-soft"></i>
+            </div>
+            <p class="text-white/90 text-sm font-medium tracking-wide">スワイプで切替</p>
           </div>
         </div>
-
-        <!-- 予想着順 -->
-        <div class="bg-slate-800/50 rounded-xl p-4 sm:p-6 mb-6 text-center">
-          <p class="text-sm text-slate-400 mb-3">予想着順</p>
-          <div class="flex items-center justify-center gap-2 text-2xl" id="prediction-order">
-          </div>
-        </div>
-
-        <!-- 推奨買い目 -->
-        <div class="mb-6">
-          <h3 class="text-sm font-medium text-slate-400 mb-3">
-            <i class="fa-solid fa-coins mr-1"></i>推奨買い目
-          </h3>
-          <div class="bg-slate-800/50 rounded-lg overflow-hidden">
-            <table class="w-full">
-              <thead>
-                <tr class="border-b border-slate-700">
-                  <th class="px-4 py-2.5 text-left text-xs font-medium text-slate-400">券種</th>
-                  <th class="px-4 py-2.5 text-center text-xs font-medium text-slate-400">組合せ</th>
-                  <th class="px-4 py-2.5 text-right text-xs font-medium text-slate-400">オッズ</th>
-                </tr>
-              </thead>
-              <tbody id="bets-table-body">
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- 分析詳細 -->
-        <div>
-          <button onclick="toggleAnalysis()" class="flex items-center gap-2 text-sm text-slate-400 hover:text-slate-300 transition mb-3">
-            <i class="fa-solid fa-chevron-down text-xs" id="analysis-toggle-icon"></i>分析詳細
-          </button>
-          <div id="analysis-detail" class="hidden bg-slate-800/50 rounded-lg p-4">
-            <p class="text-sm text-slate-300 leading-relaxed" id="analysis-text"></p>
-          </div>
+        <!-- 下部コントロール -->
+        <div class="flex items-center justify-center mt-4">
+          <div class="flex gap-2" id="carousel-dots"></div>
         </div>
       </div>
     </section>
@@ -145,14 +121,16 @@
   <script src="../shared/header.js"></script>
   <script>
     let selectedRace = 1;
-    let selectedLogic = null;
+    let currentSlide = 0;
 
     // 初期化
     document.addEventListener('DOMContentLoaded', function () {
       initStadiumSelect();
       initRaceTabs();
       renderRaceTable();
-      renderLogicCards();
+      initCarousel();
+      initSwipe();
+      initSwipeHint();
     });
 
     // レース場セレクト初期化
@@ -165,7 +143,7 @@
         if (num === '3') opt.selected = true;
         select.appendChild(opt);
       });
-      select.addEventListener('change', () => { renderRaceTable(); });
+      select.addEventListener('change', () => { renderRaceTable(); initCarousel(); });
     }
 
     // レース番号タブ初期化
@@ -175,16 +153,16 @@
         const btn = document.createElement('button');
         btn.textContent = i + 'R';
         btn.className = i === 1
-          ? 'px-3 py-1.5 rounded-lg text-sm font-medium bg-sky-500 text-white transition'
-          : 'px-3 py-1.5 rounded-lg text-sm font-medium bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-300 transition';
+          ? 'px-3 py-2 rounded-lg text-sm font-semibold bg-gold text-charcoal shadow-elevation-1 transition-all duration-600 ease-premium flex-shrink-0'
+          : 'px-3 py-2 rounded-lg text-sm font-medium text-warm-gray hover:bg-dark-surface hover:text-charcoal transition-all duration-400 flex-shrink-0';
         btn.addEventListener('click', () => {
           selectedRace = i;
           document.querySelectorAll('#race-tabs button').forEach(b => {
-            b.className = 'px-3 py-1.5 rounded-lg text-sm font-medium bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-300 transition';
+            b.className = 'px-3 py-2 rounded-lg text-sm font-medium text-warm-gray hover:bg-dark-surface hover:text-charcoal transition-all duration-400 flex-shrink-0';
           });
-          btn.className = 'px-3 py-1.5 rounded-lg text-sm font-medium bg-sky-500 text-white transition';
+          btn.className = 'px-3 py-2 rounded-lg text-sm font-semibold bg-gold text-charcoal shadow-elevation-1 transition-all duration-600 ease-premium flex-shrink-0';
           renderRaceTable();
-          if (selectedLogic) showPrediction(selectedLogic);
+          initCarousel();
         });
         container.appendChild(btn);
       }
@@ -200,97 +178,184 @@
 
       const tbody = document.getElementById('race-table-body');
       tbody.innerHTML = program.boats.map(boat => `
-        <tr class="border-b border-slate-700/50 hover:bg-slate-800/30 transition">
+        <tr class="transition-all duration-400">
           <td class="px-4 py-3">${getBoatBadge(boat.racer_boat_number)}</td>
           <td class="px-4 py-3">
             <div>
-              <p class="text-white font-medium">${boat.racer_name}</p>
-              <p class="text-xs text-slate-500">${boat.racer_number} / ${boat.racer_age}歳 / ${boat.racer_weight}kg</p>
+              <p class="text-charcoal font-medium">${boat.racer_name}</p>
+              <p class="text-xs text-warm-gray">${boat.racer_number} / ${boat.racer_age}歳 / ${boat.racer_weight}kg</p>
             </div>
           </td>
           <td class="px-4 py-3 text-center">
             <span class="${getClassStyle(boat.racer_class_number)}">${RACER_CLASSES[boat.racer_class_number]}</span>
           </td>
-          <td class="px-4 py-3 text-center font-mono ${boat.racer_national_top_1_percent >= 6.0 ? 'text-amber-400 font-bold' : 'text-white'}">${boat.racer_national_top_1_percent.toFixed(2)}</td>
-          <td class="px-4 py-3 text-center font-mono text-white">${boat.racer_national_top_2_percent.toFixed(1)}%</td>
-          <td class="px-4 py-3 text-center font-mono ${boat.racer_average_start_timing <= 0.15 ? 'text-green-400 font-bold' : 'text-white'}">${boat.racer_average_start_timing.toFixed(2)}</td>
+          <td class="px-4 py-3 text-center font-mono ${boat.racer_national_top_1_percent >= 6.0 ? 'text-gold-warm font-bold' : 'text-charcoal'}">${boat.racer_national_top_1_percent.toFixed(2)}</td>
+          <td class="px-4 py-3 text-center font-mono text-charcoal">${boat.racer_national_top_2_percent.toFixed(1)}%</td>
+          <td class="px-4 py-3 text-center font-mono ${boat.racer_average_start_timing <= 0.15 ? 'text-status-success font-bold' : 'text-charcoal'}">${boat.racer_average_start_timing.toFixed(2)}</td>
           <td class="px-4 py-3 text-center">
-            <span class="font-mono text-white">${boat.racer_assigned_motor_number}</span>
-            <span class="text-xs ${boat.racer_assigned_motor_top_2_percent >= 45 ? 'text-amber-400' : 'text-slate-400'} ml-1">${boat.racer_assigned_motor_top_2_percent.toFixed(1)}%</span>
+            <span class="font-mono text-charcoal">${boat.racer_assigned_motor_number}</span>
+            <span class="text-xs ${boat.racer_assigned_motor_top_2_percent >= 45 ? 'text-gold-warm' : 'text-warm-gray'} ml-1">${boat.racer_assigned_motor_top_2_percent.toFixed(1)}%</span>
           </td>
           <td class="px-4 py-3 text-center">
-            <span class="font-mono text-white">${boat.racer_assigned_boat_number}</span>
-            <span class="text-xs text-slate-400 ml-1">${boat.racer_assigned_boat_top_2_percent.toFixed(1)}%</span>
+            <span class="font-mono text-charcoal">${boat.racer_assigned_boat_number}</span>
+            <span class="text-xs text-warm-gray ml-1">${boat.racer_assigned_boat_top_2_percent.toFixed(1)}%</span>
           </td>
         </tr>
       `).join('');
     }
 
-    // ロジックカード描画
-    function renderLogicCards() {
-      const container = document.getElementById('logic-cards');
-      container.innerHTML = DUMMY_LOGICS.map(logic => `
-        <div class="bg-gray-900 border-2 border-slate-700 rounded-xl p-5 cursor-pointer transition hover:border-slate-500 group"
-          data-logic="${logic.id}" onclick="selectLogic('${logic.id}', this)">
-          <div class="flex items-center justify-between mb-3">
-            <h3 class="text-lg font-bold text-white">${logic.name}</h3>
-            <span class="px-2 py-0.5 rounded text-xs font-medium ${logic.status === '有効' ? 'bg-green-500/20 text-green-400' : 'bg-purple-500/20 text-purple-400'}">${logic.status}</span>
+    // カルーセル初期化
+    function initCarousel() {
+      const track = document.getElementById('carousel-track');
+      const dots = document.getElementById('carousel-dots');
+
+      track.innerHTML = DUMMY_LOGICS.map((logic, i) => {
+        const pred = DUMMY_PREDICTIONS[logic.id];
+        const statusClass = logic.status === '有効'
+          ? 'bg-status-success-bg text-status-success'
+          : 'bg-status-purple-bg text-status-purple';
+
+        const betsRows = pred.bets.map(bet => `
+          <tr class="transition-all duration-400">
+            <td class="px-4 py-3 text-charcoal font-medium">${bet.type}</td>
+            <td class="px-4 py-3 text-center font-mono text-charcoal">${bet.combination}</td>
+            <td class="px-4 py-3 text-right font-mono font-bold text-gold-warm">${bet.odds.toFixed(1)}</td>
+          </tr>
+        `).join('');
+
+        return `
+          <div class="w-full flex-shrink-0">
+            <div class="card-gold-accent overflow-hidden">
+              <!-- ロジック概要 -->
+              <div class="px-5 sm:px-7 py-5" style="border-bottom: 1px solid var(--border-gold-accent)">
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-lg font-bold text-charcoal">${logic.name}<span class="text-sm font-normal text-warm-gray ml-2">${pred.logic_subtitle}</span></h3>
+                  <span class="px-2 py-0.5 rounded text-xs font-medium ${statusClass}">${logic.status}</span>
+                </div>
+                <p class="text-sm text-warm-gray mb-3">${logic.description}</p>
+                <div class="flex items-center gap-3">
+                  <span class="text-xs text-warm-gray">的中率</span>
+                  <div class="flex-1 bg-dark-surface rounded-full h-1.5">
+                    <div class="bg-gold h-1.5 rounded-full" style="width: ${logic.accuracy}%"></div>
+                  </div>
+                  <span class="text-sm font-mono font-bold text-gold-warm">${logic.accuracy}%</span>
+                </div>
+              </div>
+
+              <!-- 予測結果 -->
+              <div class="px-5 sm:px-7 py-5">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                  <h4 class="text-xs font-semibold uppercase tracking-widest text-warm-gray/80">
+                    <i class="fa-solid fa-crosshairs text-gold-shine mr-1"></i>予測結果
+                  </h4>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs text-warm-gray">信頼度</span>
+                    <div class="w-28">${getConfidenceBar(pred.confidence)}</div>
+                  </div>
+                </div>
+
+                <div class="bg-gradient-to-b from-dark-surface/80 to-dark-light/40 rounded-2xl p-5 sm:p-6 mb-5 text-center">
+                  <p class="text-xs font-semibold uppercase tracking-widest text-warm-gray/80 mb-2">予想着順</p>
+                  <div class="flex items-center justify-center gap-2 text-xl">
+                    ${renderPredictionOrder(pred.top3, 'lg')}
+                  </div>
+                </div>
+
+                <div class="mb-4">
+                  <h4 class="text-xs font-semibold uppercase tracking-widest text-warm-gray/80 mb-2">
+                    <i class="fa-solid fa-coins mr-1"></i>推奨買い目
+                  </h4>
+                  <div class="rounded-xl overflow-hidden bg-dark-surface/50">
+                    <table class="table-premium">
+                      <thead>
+                        <tr>
+                          <th class="text-left">券種</th>
+                          <th class="text-center">組合せ</th>
+                          <th class="text-right">オッズ</th>
+                        </tr>
+                      </thead>
+                      <tbody>${betsRows}</tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div>
+                  <button onclick="toggleAnalysis(${i})" class="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-warm-gray/70 hover:text-charcoal transition-all duration-400 mb-3">
+                    <i class="fa-solid fa-chevron-down text-xs" id="analysis-icon-${i}"></i>分析詳細
+                  </button>
+                  <div id="analysis-detail-${i}" class="hidden bg-dark-surface/50 rounded-xl p-5">
+                    <p class="text-sm text-warm-text leading-relaxed">${pred.analysis}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <p class="text-sm text-slate-400 mb-3">${logic.description}</p>
-          <div class="flex items-center justify-between">
-            <span class="text-xs text-slate-500">的中率</span>
-            <span class="text-amber-400 font-mono font-bold">${logic.accuracy}%</span>
-          </div>
-          <div class="mt-2 bg-slate-700 rounded-full h-1.5">
-            <div class="bg-amber-400 h-1.5 rounded-full" style="width: ${logic.accuracy}%"></div>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
+
+      dots.innerHTML = DUMMY_LOGICS.map((_, i) =>
+        `<button onclick="goToSlide(${i})" class="w-2.5 h-2.5 rounded-full bg-dark-surface/60 transition-all duration-400" data-dot="${i}"></button>`
+      ).join('');
+
+      updateCarousel();
     }
 
-    // ロジック選択
-    function selectLogic(logicId, el) {
-      selectedLogic = logicId;
-      document.querySelectorAll('#logic-cards > div').forEach(card => {
-        card.className = 'bg-gray-900 border-2 border-slate-700 rounded-xl p-5 cursor-pointer transition hover:border-slate-500 group';
+    function goToSlide(index) {
+      currentSlide = index;
+      updateCarousel();
+    }
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + DUMMY_LOGICS.length) % DUMMY_LOGICS.length;
+      updateCarousel();
+    }
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % DUMMY_LOGICS.length;
+      updateCarousel();
+    }
+
+    function updateCarousel() {
+      const track = document.getElementById('carousel-track');
+      track.style.transform = `translateX(-${currentSlide * 100}%)`;
+      document.querySelectorAll('#carousel-dots button').forEach((dot, i) => {
+        dot.className = i === currentSlide
+          ? 'w-3 h-3 rounded-full bg-gold transition-all duration-400'
+          : 'w-2.5 h-2.5 rounded-full bg-dark-surface/60 transition-all duration-400';
       });
-      el.className = 'bg-gray-900 border-2 border-sky-500 rounded-xl p-5 cursor-pointer transition ring-2 ring-sky-500/30 group';
-      showPrediction(logicId);
     }
 
-    // 予測結果表示
-    function showPrediction(logicId) {
-      const pred = DUMMY_PREDICTIONS[logicId];
-      if (!pred) return;
-
-      const result = document.getElementById('prediction-result');
-      result.classList.remove('hidden');
-
-      // 信頼度バー
-      document.getElementById('confidence-bar').innerHTML = getConfidenceBar(pred.confidence);
-
-      // 予想着順
-      document.getElementById('prediction-order').innerHTML = renderPredictionOrder(pred.top3, 'lg');
-
-      // 買い目テーブル
-      document.getElementById('bets-table-body').innerHTML = pred.bets.map(bet => `
-        <tr class="border-b border-slate-700/50">
-          <td class="px-4 py-3 text-white font-medium">${bet.type}</td>
-          <td class="px-4 py-3 text-center font-mono text-white">${bet.combination}</td>
-          <td class="px-4 py-3 text-right font-mono font-bold text-amber-400">${bet.odds.toFixed(1)}</td>
-        </tr>
-      `).join('');
-
-      // 分析テキスト
-      document.getElementById('analysis-text').textContent = pred.analysis;
-      document.getElementById('analysis-detail').classList.add('hidden');
-      document.getElementById('analysis-toggle-icon').className = 'fa-solid fa-chevron-down text-xs';
+    // スワイプ対応
+    function initSwipe() {
+      const viewport = document.getElementById('carousel-viewport');
+      let startX = 0, deltaX = 0;
+      viewport.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; deltaX = 0; }, { passive: true });
+      viewport.addEventListener('touchmove', function(e) { deltaX = e.touches[0].clientX - startX; }, { passive: true });
+      viewport.addEventListener('touchend', function() {
+        if (Math.abs(deltaX) > 50) {
+          deltaX < 0 ? nextSlide() : prevSlide();
+        }
+        deltaX = 0;
+      });
     }
 
-    // 分析詳細トグル
-    function toggleAnalysis() {
-      const detail = document.getElementById('analysis-detail');
-      const icon = document.getElementById('analysis-toggle-icon');
+    // スワイプヒント
+    function initSwipeHint() {
+      if (localStorage.getItem('bp-swipe-hint-seen')) return;
+      const hint = document.getElementById('swipe-hint');
+      hint.style.display = 'flex';
+      function dismiss() {
+        hint.style.opacity = '0';
+        setTimeout(() => { hint.style.display = 'none'; }, 500);
+        localStorage.setItem('bp-swipe-hint-seen', '1');
+        hint.removeEventListener('click', dismiss);
+      }
+      hint.addEventListener('click', dismiss);
+      setTimeout(dismiss, 4000);
+    }
+
+    // 分析詳細トグル（スライドごと）
+    function toggleAnalysis(index) {
+      const detail = document.getElementById('analysis-detail-' + index);
+      const icon = document.getElementById('analysis-icon-' + index);
       detail.classList.toggle('hidden');
       icon.className = detail.classList.contains('hidden')
         ? 'fa-solid fa-chevron-down text-xs'
