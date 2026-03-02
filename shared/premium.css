@@ -316,6 +316,7 @@ body.light-mode .btn-ghost:hover {
   padding: 0.75rem 1rem;
   color: var(--text-primary);
   font-size: 0.875rem;
+  line-height: 1.25;
   transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   box-shadow: var(--shadow-input);
 }
@@ -346,7 +347,6 @@ select.input-premium {
 input[type="date"].input-premium {
   -webkit-appearance: none;
   appearance: none;
-  line-height: 1.25;
 }
 
 /* --- Premium Table System --- */
