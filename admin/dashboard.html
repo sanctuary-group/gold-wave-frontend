@@ -228,6 +228,42 @@
           </div>
         </div>
 
+        <!-- API接続情報 -->
+        <div class="pt-2" style="border-top: 1px solid var(--border-gold-accent)">
+          <label class="block text-sm font-medium text-warm-text mb-3">
+            <i class="fa-solid fa-key text-gold-shine mr-1"></i>API接続情報
+          </label>
+          <div class="space-y-3">
+            <div>
+              <span class="block text-xs text-warm-gray mb-1">エンドポイントURL</span>
+              <div class="flex items-center gap-2">
+                <div class="flex-1 input-premium text-sm font-mono bg-dark-surface/50 truncate cursor-default" id="modal-api-endpoint">https://api.bp-engine.com/v1/predict-new</div>
+                <button type="button" onclick="copyToClipboard('modal-api-endpoint')" class="btn-ghost px-3 py-2 text-gold" title="コピー">
+                  <i class="fa-regular fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            <div>
+              <span class="block text-xs text-warm-gray mb-1">APIキー</span>
+              <div class="flex items-center gap-2">
+                <div class="flex-1 input-premium text-sm font-mono bg-dark-surface/50 truncate cursor-default" id="modal-api-key">
+                  <span id="modal-api-key-display">sk-bp-••••••••••••••••</span>
+                  <span id="modal-api-key-full" class="hidden">sk-bp-x9y8z7w6v5u4t3s2</span>
+                </div>
+                <button type="button" onclick="toggleModalApiKey()" class="btn-ghost px-3 py-2 text-warm-gray hover:text-charcoal" title="表示/非表示">
+                  <i class="fa-solid fa-eye text-sm" id="modal-api-key-eye"></i>
+                </button>
+                <button type="button" onclick="copyApiKey()" class="btn-ghost px-3 py-2 text-gold" title="コピー">
+                  <i class="fa-regular fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            <div id="copy-notification" class="hidden rounded-xl px-4 py-2 text-sm bg-status-success-bg text-status-success text-center">
+              <i class="fa-solid fa-check mr-1"></i>クリップボードにコピーしました
+            </div>
+          </div>
+        </div>
+
         <div class="flex gap-3 pt-2">
           <button type="button" onclick="closeLogicModal()"
             class="btn-ghost flex-1 py-2.5">
@@ -374,6 +410,43 @@
           display.textContent = (slider.value / 100).toFixed(2);
         });
       });
+    }
+
+    // APIキー表示/非表示
+    function toggleModalApiKey() {
+      const display = document.getElementById('modal-api-key-display');
+      const full = document.getElementById('modal-api-key-full');
+      const icon = document.getElementById('modal-api-key-eye');
+      if (full.classList.contains('hidden')) {
+        full.classList.remove('hidden');
+        display.classList.add('hidden');
+        icon.className = 'fa-solid fa-eye-slash text-sm';
+      } else {
+        full.classList.add('hidden');
+        display.classList.remove('hidden');
+        icon.className = 'fa-solid fa-eye text-sm';
+      }
+    }
+
+    // テキストコピー
+    function copyToClipboard(elementId) {
+      const text = document.getElementById(elementId).textContent.trim();
+      navigator.clipboard.writeText(text);
+      showCopyNotification();
+    }
+
+    // APIキーコピー（常にフルキーをコピー）
+    function copyApiKey() {
+      const full = document.getElementById('modal-api-key-full').textContent.trim();
+      navigator.clipboard.writeText(full);
+      showCopyNotification();
+    }
+
+    // コピー通知表示
+    function showCopyNotification() {
+      const el = document.getElementById('copy-notification');
+      el.classList.remove('hidden');
+      setTimeout(() => el.classList.add('hidden'), 2000);
     }
   </script>
 </body>

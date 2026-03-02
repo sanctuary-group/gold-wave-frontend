@@ -108,10 +108,7 @@
           </div>
         </div>
         <!-- 下部コントロール -->
-        <div class="flex items-center justify-center mt-4 relative">
-          <button onclick="toggleAutoplay()" id="autoplay-btn" class="absolute left-0 w-8 h-8 rounded-full border border-gold/30 text-gold hover:bg-gold/10 transition-all duration-400 flex items-center justify-center" title="自動再生">
-            <i class="fa-solid fa-forward text-xs" id="autoplay-icon"></i>
-          </button>
+        <div class="flex items-center justify-center mt-4">
           <div class="flex gap-2" id="carousel-dots"></div>
         </div>
       </div>
@@ -125,7 +122,6 @@
   <script>
     let selectedRace = 1;
     let currentSlide = 0;
-    let autoplayInterval = null;
 
     // 初期化
     document.addEventListener('DOMContentLoaded', function () {
@@ -305,7 +301,6 @@
     }
 
     function goToSlide(index) {
-      if (autoplayInterval) stopAutoplay();
       currentSlide = index;
       updateCarousel();
     }
@@ -328,28 +323,6 @@
       });
     }
 
-    // 自動再生
-    function toggleAutoplay() {
-      if (autoplayInterval) {
-        stopAutoplay();
-      } else {
-        startAutoplay();
-      }
-    }
-    function startAutoplay() {
-      autoplayInterval = setInterval(() => nextSlide(), 4000);
-      const icon = document.getElementById('autoplay-icon');
-      icon.className = 'fa-solid fa-pause text-xs';
-      document.getElementById('autoplay-btn').classList.add('bg-gold/10');
-    }
-    function stopAutoplay() {
-      clearInterval(autoplayInterval);
-      autoplayInterval = null;
-      const icon = document.getElementById('autoplay-icon');
-      icon.className = 'fa-solid fa-forward text-xs';
-      document.getElementById('autoplay-btn').classList.remove('bg-gold/10');
-    }
-
     // スワイプ対応
     function initSwipe() {
       const viewport = document.getElementById('carousel-viewport');
@@ -358,7 +331,6 @@
       viewport.addEventListener('touchmove', function(e) { deltaX = e.touches[0].clientX - startX; }, { passive: true });
       viewport.addEventListener('touchend', function() {
         if (Math.abs(deltaX) > 50) {
-          if (autoplayInterval) stopAutoplay();
           deltaX < 0 ? nextSlide() : prevSlide();
         }
         deltaX = 0;
