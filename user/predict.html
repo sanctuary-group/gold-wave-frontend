@@ -305,11 +305,13 @@
       updateCarousel();
     }
     function prevSlide() {
-      currentSlide = (currentSlide - 1 + DUMMY_LOGICS.length) % DUMMY_LOGICS.length;
+      if (currentSlide <= 0) return;
+      currentSlide--;
       updateCarousel();
     }
     function nextSlide() {
-      currentSlide = (currentSlide + 1) % DUMMY_LOGICS.length;
+      if (currentSlide >= DUMMY_LOGICS.length - 1) return;
+      currentSlide++;
       updateCarousel();
     }
 
@@ -323,31 +325,50 @@
       });
     }
 
-    // スワイプ対応（ドラッグ追従付き）
+    // スワイプ対応（方向検出+ドラッグ追従）
     function initSwipe() {
       const viewport = document.getElementById('carousel-viewport');
       const track = document.getElementById('carousel-track');
-      let startX = 0, startTime = 0, deltaX = 0, dragging = false;
+      let startX = 0, startY = 0, startTime = 0, deltaX = 0;
+      let dragging = false, dirLocked = false, isHorizontal = false;
 
       viewport.addEventListener('touchstart', function(e) {
         startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
         startTime = Date.now();
         deltaX = 0;
-        dragging = true;
-        track.style.transition = 'none';
+        dragging = false;
+        dirLocked = false;
+        isHorizontal = false;
       }, { passive: true });
 
       viewport.addEventListener('touchmove', function(e) {
+        const dx = e.touches[0].clientX - startX;
+        const dy = e.touches[0].clientY - startY;
+        // 最初の5px移動で方向を判定
+        if (!dirLocked && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          dirLocked = true;
+          isHorizontal = Math.abs(dx) > Math.abs(dy);
+          if (isHorizontal) {
+            dragging = true;
+            track.style.transition = 'none';
+          }
+        }
         if (!dragging) return;
-        deltaX = e.touches[0].clientX - startX;
+        deltaX = dx;
         const baseOffset = -currentSlide * 100;
-        const dragPercent = (deltaX / viewport.offsetWidth) * 100;
+        let dragPercent = (deltaX / viewport.offsetWidth) * 100;
+        // 端では抵抗感（1/4に減衰）
+        const atStart = currentSlide === 0 && deltaX > 0;
+        const atEnd = currentSlide === DUMMY_LOGICS.length - 1 && deltaX < 0;
+        if (atStart || atEnd) dragPercent *= 0.25;
         track.style.transform = `translateX(${baseOffset + dragPercent}%)`;
       }, { passive: true });
 
       viewport.addEventListener('touchend', function() {
         if (!dragging) return;
         dragging = false;
+        dirLocked = false;
         track.style.transition = '';
         const elapsed = Date.now() - startTime;
         const velocity = Math.abs(deltaX) / elapsed;
