@@ -4,58 +4,52 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BOAT PREDICTOR - ボートレース予測</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="shared/tailwind-config.js"></script>
+  <link rel="stylesheet" href="shared/premium.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            dark: { 900: '#0a0e1a', 800: '#111827', 700: '#1e293b' }
-          }
-        }
-      }
-    }
-  </script>
 </head>
-<body class="bg-[#0a0e1a] text-slate-100 min-h-screen flex flex-col">
+<body class="bg-dark text-charcoal font-body min-h-screen flex flex-col bg-pattern-subtle">
 
   <div id="app-header"></div>
 
   <!-- メインコンテンツ -->
-  <main class="flex-1 flex items-center justify-center px-4">
-    <div class="text-center max-w-lg">
+  <main class="flex-1 flex items-center justify-center px-4 py-16">
+    <div class="text-center max-w-lg stagger-children">
       <!-- ロゴ -->
-      <div class="mb-8">
-        <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-sky-500/10 border border-sky-500/30 mb-6">
-          <i class="fa-solid fa-ship text-sky-500 text-3xl"></i>
+      <div class="mb-10">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-b from-gold/15 to-gold/5 mb-8 animate-float">
+          <i class="fa-solid fa-ship text-gold-shine text-3xl"></i>
         </div>
-        <h1 class="text-4xl sm:text-5xl font-bold mb-3">
-          <span class="text-sky-500">BOAT</span>
-          <span class="text-white">PREDICTOR</span>
+        <h1 class="text-5xl sm:text-7xl font-bold mb-4 tracking-tight">
+          <span class="text-gold-gradient font-heading">BOAT</span>
+          <span class="text-charcoal font-heading">PREDICTOR</span>
         </h1>
-        <p class="text-slate-400 text-lg">AIが導くボートレース予測</p>
+        <p class="text-warm-gray/80 text-base tracking-wide">AIが導くボートレース予測</p>
       </div>
 
       <!-- ボタン群 -->
-      <div class="space-y-4 mb-8">
-        <a href="user/login.html" class="block w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3.5 px-6 rounded-xl transition-all hover:shadow-lg hover:shadow-sky-500/25">
+      <div class="space-y-4 mb-10">
+        <a href="user/login.html" class="block w-full btn-primary text-base">
           <i class="fa-solid fa-right-to-bracket mr-2"></i>ログイン
         </a>
-        <a href="user/register.html" class="block w-full bg-transparent border-2 border-sky-500/50 hover:border-sky-500 text-sky-400 hover:text-white font-bold py-3.5 px-6 rounded-xl transition-all">
+        <a href="user/register.html" class="block w-full btn-secondary text-base">
           <i class="fa-solid fa-user-plus mr-2"></i>新規登録
         </a>
       </div>
 
       <!-- 管理者リンク -->
-      <a href="admin/login.html" class="text-sm text-slate-500 hover:text-slate-300 transition">
+      <a href="admin/login.html" class="text-xs text-warm-gray/60 hover:text-warm-gray transition-all duration-600">
         <i class="fa-solid fa-user-shield mr-1"></i>管理者はこちら
       </a>
     </div>
   </main>
 
   <!-- フッター -->
-  <footer class="text-center py-6 text-slate-600 text-sm">
+  <footer class="text-center py-8 text-warm-gray/50 text-xs tracking-wider">
     &copy; 2026 BOAT PREDICTOR. All rights reserved.
   </footer>
 
