@@ -123,6 +123,7 @@
     let selectedRace = 1;
     let currentSlide = 0;
     let virtualIndex = 1;
+    let transitioning = false;
 
     // 初期化
     document.addEventListener('DOMContentLoaded', function () {
@@ -327,30 +328,34 @@
       updateCarousel();
     }
     function prevSlide() {
+      if (transitioning) return;
       const track = document.getElementById('carousel-track');
       currentSlide = (currentSlide - 1 + DUMMY_LOGICS.length) % DUMMY_LOGICS.length;
       virtualIndex--;
       updateCarousel();
       if (virtualIndex <= 0) {
+        transitioning = true;
         setTimeout(() => {
           track.style.transition = 'none';
           virtualIndex = DUMMY_LOGICS.length;
           updateCarousel();
-          requestAnimationFrame(() => { track.style.transition = ''; });
+          requestAnimationFrame(() => { track.style.transition = ''; transitioning = false; });
         }, 310);
       }
     }
     function nextSlide() {
+      if (transitioning) return;
       const track = document.getElementById('carousel-track');
       currentSlide = (currentSlide + 1) % DUMMY_LOGICS.length;
       virtualIndex++;
       updateCarousel();
       if (virtualIndex >= DUMMY_LOGICS.length + 1) {
+        transitioning = true;
         setTimeout(() => {
           track.style.transition = 'none';
           virtualIndex = 1;
           updateCarousel();
-          requestAnimationFrame(() => { track.style.transition = ''; });
+          requestAnimationFrame(() => { track.style.transition = ''; transitioning = false; });
         }, 310);
       }
     }
@@ -373,6 +378,7 @@
       let dragging = false, dirLocked = false, isHorizontal = false;
 
       viewport.addEventListener('touchstart', function(e) {
+        if (transitioning) return;
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         startTime = Date.now();
