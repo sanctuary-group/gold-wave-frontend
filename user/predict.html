@@ -93,7 +93,7 @@
         </button>
         <!-- カルーセル本体 -->
         <div class="overflow-hidden rounded-2xl relative" id="carousel-viewport">
-          <div class="flex transition-transform duration-300 ease-premium" id="carousel-track">
+          <div class="flex transition-transform duration-300 ease-out" id="carousel-track">
           </div>
           <!-- スワイプヒント -->
           <div id="swipe-hint" class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm rounded-2xl cursor-pointer transition-opacity duration-500" style="display:none;">
@@ -374,11 +374,15 @@
     function initSwipe() {
       const viewport = document.getElementById('carousel-viewport');
       const track = document.getElementById('carousel-track');
+      track.style.willChange = 'transform';
+      let vpWidth = viewport.offsetWidth;
+      window.addEventListener('resize', () => { vpWidth = viewport.offsetWidth; });
       let startX = 0, startY = 0, startTime = 0, deltaX = 0;
       let dragging = false, dirLocked = false, isHorizontal = false;
 
       viewport.addEventListener('touchstart', function(e) {
         if (transitioning) return;
+        track.style.transition = 'none';
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         startTime = Date.now();
@@ -403,7 +407,7 @@
         if (!dragging) return;
         deltaX = dx;
         const baseOffset = -virtualIndex * 100;
-        const dragPercent = (deltaX / viewport.offsetWidth) * 100;
+        const dragPercent = (deltaX / vpWidth) * 100;
         track.style.transform = `translateX(${baseOffset + dragPercent}%)`;
       }, { passive: true });
 
