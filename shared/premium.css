@@ -343,7 +343,12 @@ select.input-premium {
   padding-right: 2.5rem;
 }
 
-/* iOS date input正規化 */
+/* select / date input 高さ統一 */
+select.input-premium,
+input[type="date"].input-premium {
+  height: 2.75rem;
+}
+
 input[type="date"].input-premium {
   -webkit-appearance: none;
   appearance: none;
