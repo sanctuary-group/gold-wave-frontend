@@ -122,6 +122,7 @@
   <script>
     let selectedRace = 1;
     let currentSlide = 0;
+    let virtualIndex = 1;
 
     // 初期化
     document.addEventListener('DOMContentLoaded', function () {
@@ -205,17 +206,13 @@
     }
 
     // カルーセル初期化
-    function initCarousel() {
-      const track = document.getElementById('carousel-track');
-      const dots = document.getElementById('carousel-dots');
+    function buildSlideHTML(logic, i, isClone) {
+      const pred = DUMMY_PREDICTIONS[logic.id];
+      const statusClass = logic.status === '有効'
+        ? 'bg-status-success-bg text-status-success'
+        : 'bg-status-purple-bg text-status-purple';
 
-      track.innerHTML = DUMMY_LOGICS.map((logic, i) => {
-        const pred = DUMMY_PREDICTIONS[logic.id];
-        const statusClass = logic.status === '有効'
-          ? 'bg-status-success-bg text-status-success'
-          : 'bg-status-purple-bg text-status-purple';
-
-        const betsRows = pred.bets.map(bet => `
+      const betsRows = pred.bets.map(bet => `
           <tr class="transition-all duration-400">
             <td class="px-4 py-3 text-charcoal font-medium">${bet.type}</td>
             <td class="px-4 py-3 text-center font-mono text-charcoal">${bet.combination}</td>
@@ -223,7 +220,17 @@
           </tr>
         `).join('');
 
-        return `
+      const detailId = isClone ? `analysis-detail-clone-${i}` : `analysis-detail-${i}`;
+      const iconId = isClone ? `analysis-icon-clone-${i}` : `analysis-icon-${i}`;
+      const toggleBtn = isClone
+        ? `<span class="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-warm-gray/70 mb-3">
+                    <i class="fa-solid fa-chevron-down text-xs"></i>分析詳細
+                  </span>`
+        : `<button onclick="toggleAnalysis(${i})" class="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-warm-gray/70 hover:text-charcoal transition-all duration-400 mb-3">
+                    <i class="fa-solid fa-chevron-down text-xs" id="${iconId}"></i>分析詳細
+                  </button>`;
+
+      return `
           <div class="w-full flex-shrink-0">
             <div class="card-gold-accent overflow-hidden">
               <!-- ロジック概要 -->
@@ -280,10 +287,8 @@
                 </div>
 
                 <div>
-                  <button onclick="toggleAnalysis(${i})" class="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-warm-gray/70 hover:text-charcoal transition-all duration-400 mb-3">
-                    <i class="fa-solid fa-chevron-down text-xs" id="analysis-icon-${i}"></i>分析詳細
-                  </button>
-                  <div id="analysis-detail-${i}" class="hidden bg-dark-surface/50 rounded-xl p-5">
+                  ${toggleBtn}
+                  <div id="${detailId}" class="hidden bg-dark-surface/50 rounded-xl p-5">
                     <p class="text-sm text-warm-text leading-relaxed">${pred.analysis}</p>
                   </div>
                 </div>
@@ -291,7 +296,23 @@
             </div>
           </div>
         `;
-      }).join('');
+    }
+
+    function initCarousel() {
+      const track = document.getElementById('carousel-track');
+      const dots = document.getElementById('carousel-dots');
+      const total = DUMMY_LOGICS.length;
+
+      // 実スライドHTML
+      const realSlides = DUMMY_LOGICS.map((logic, i) => buildSlideHTML(logic, i, false)).join('');
+      // クローン: 末尾（C）を先頭に、先頭（A）を末尾に追加してループを実現
+      const firstClone = buildSlideHTML(DUMMY_LOGICS[0], 0, true);
+      const lastClone = buildSlideHTML(DUMMY_LOGICS[total - 1], total - 1, true);
+      track.innerHTML = lastClone + realSlides + firstClone;
+
+      // virtualIndex=1 が実スライドの先頭（A）
+      currentSlide = 0;
+      virtualIndex = 1;
 
       dots.innerHTML = DUMMY_LOGICS.map((_, i) =>
         `<button onclick="goToSlide(${i})" class="w-2.5 h-2.5 rounded-full bg-dark-surface/60 transition-all duration-400" data-dot="${i}"></button>`
@@ -302,22 +323,41 @@
 
     function goToSlide(index) {
       currentSlide = index;
+      virtualIndex = index + 1;
       updateCarousel();
     }
     function prevSlide() {
-      if (currentSlide <= 0) return;
-      currentSlide--;
+      const track = document.getElementById('carousel-track');
+      currentSlide = (currentSlide - 1 + DUMMY_LOGICS.length) % DUMMY_LOGICS.length;
+      virtualIndex--;
       updateCarousel();
+      if (virtualIndex <= 0) {
+        setTimeout(() => {
+          track.style.transition = 'none';
+          virtualIndex = DUMMY_LOGICS.length;
+          updateCarousel();
+          requestAnimationFrame(() => { track.style.transition = ''; });
+        }, 310);
+      }
     }
     function nextSlide() {
-      if (currentSlide >= DUMMY_LOGICS.length - 1) return;
-      currentSlide++;
+      const track = document.getElementById('carousel-track');
+      currentSlide = (currentSlide + 1) % DUMMY_LOGICS.length;
+      virtualIndex++;
       updateCarousel();
+      if (virtualIndex >= DUMMY_LOGICS.length + 1) {
+        setTimeout(() => {
+          track.style.transition = 'none';
+          virtualIndex = 1;
+          updateCarousel();
+          requestAnimationFrame(() => { track.style.transition = ''; });
+        }, 310);
+      }
     }
 
     function updateCarousel() {
       const track = document.getElementById('carousel-track');
-      track.style.transform = `translateX(-${currentSlide * 100}%)`;
+      track.style.transform = `translateX(-${virtualIndex * 100}%)`;
       document.querySelectorAll('#carousel-dots button').forEach((dot, i) => {
         dot.className = i === currentSlide
           ? 'w-3 h-3 rounded-full bg-gold transition-all duration-400'
@@ -356,12 +396,8 @@
         }
         if (!dragging) return;
         deltaX = dx;
-        const baseOffset = -currentSlide * 100;
-        let dragPercent = (deltaX / viewport.offsetWidth) * 100;
-        // 端では抵抗感（1/4に減衰）
-        const atStart = currentSlide === 0 && deltaX > 0;
-        const atEnd = currentSlide === DUMMY_LOGICS.length - 1 && deltaX < 0;
-        if (atStart || atEnd) dragPercent *= 0.25;
+        const baseOffset = -virtualIndex * 100;
+        const dragPercent = (deltaX / viewport.offsetWidth) * 100;
         track.style.transform = `translateX(${baseOffset + dragPercent}%)`;
       }, { passive: true });
 
@@ -378,6 +414,16 @@
         } else {
           updateCarousel();
         }
+        deltaX = 0;
+      });
+
+      // タッチキャンセル（iOS端ジェスチャー等）
+      viewport.addEventListener('touchcancel', function() {
+        if (!dragging) return;
+        dragging = false;
+        dirLocked = false;
+        track.style.transition = '';
+        updateCarousel();
         deltaX = 0;
       });
     }
