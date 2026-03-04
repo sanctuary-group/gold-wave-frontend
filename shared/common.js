@@ -80,40 +80,113 @@ function getConfidenceBar(percent) {
     </div>`;
 }
 
-// 予想着順エリアのキラキラパーティクル生成
+// 予想着順エリアのキラキラパーティクル生成（canvas版: DOM要素の代わりに1枚のcanvasで描画）
 function initPredictionSparkles() {
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function getStarState(p, now) {
+    const t = ((now + p.delay) % p.dur) / p.dur;
+    let opacity, scale, rotate;
+    if      (t < 0.2) { const u = t / 0.2;        opacity = lerp(0,           p.peak,       u); scale = lerp(0.2, 1,   u); rotate = lerp(0,  15, u); }
+    else if (t < 0.4) { const u = (t - 0.2) / 0.2; opacity = lerp(p.peak,      p.peak * 0.5, u); scale = lerp(1,   0.7, u); rotate = lerp(15, 25, u); }
+    else if (t < 0.6) { const u = (t - 0.4) / 0.2; opacity = lerp(p.peak*0.5,  p.peak,       u); scale = lerp(0.7, 1.1, u); rotate = lerp(25, 35, u); }
+    else if (t < 0.8) { const u = (t - 0.6) / 0.2; opacity = lerp(p.peak,      p.peak * 0.3, u); scale = lerp(1.1, 0.5, u); rotate = lerp(35, 45, u); }
+    else               { const u = (t - 0.8) / 0.2; opacity = lerp(p.peak*0.3,  0,            u); scale = lerp(0.5, 0.2, u); rotate = lerp(45, 0,  u); }
+    return { opacity, scale, rotate };
+  }
+
+  function getGlitterState(p, now) {
+    const t = ((now + p.delay) % p.dur) / p.dur;
+    let opacity, scale;
+    if      (t < 0.3) { const u = t / 0.3;        opacity = lerp(0,          p.peak,       u); scale = lerp(0.3, 1,   u); }
+    else if (t < 0.5) { const u = (t - 0.3) / 0.2; opacity = lerp(p.peak,     p.peak * 0.4, u); scale = lerp(1,   0.6, u); }
+    else if (t < 0.7) { const u = (t - 0.5) / 0.2; opacity = lerp(p.peak*0.4, p.peak,       u); scale = lerp(0.6, 1.2, u); }
+    else               { const u = (t - 0.7) / 0.3; opacity = lerp(p.peak,     0,            u); scale = lerp(1.2, 0.3, u); }
+    return { opacity, scale };
+  }
+
+  // 4点星（clip-path: polygon と同じ形状）
+  function drawStarShape(ctx, r) {
+    const pts = [[0,-1],[0.16,-0.24],[1,0],[0.16,0.24],[0,1],[-0.16,0.24],[-1,0],[-0.16,-0.24]];
+    ctx.beginPath();
+    pts.forEach(([dx, dy], i) => {
+      i === 0 ? ctx.moveTo(dx * r, dy * r) : ctx.lineTo(dx * r, dy * r);
+    });
+    ctx.closePath();
+  }
+
   document.querySelectorAll('.prediction-sparkles').forEach(container => {
-    if (container.children.length > 0) return;
+    if (container.dataset.canvasInit) return;
+    container.dataset.canvasInit = '1';
 
-    // 大きな四角星スパークル（目立つメイン）
-    for (let i = 0; i < 5; i++) {
-      const star = document.createElement('span');
-      star.className = 'prediction-star';
-      star.style.left = (10 + Math.random() * 80) + '%';
-      star.style.top = (10 + Math.random() * 80) + '%';
-      star.style.setProperty('--dur', (2.5 + Math.random() * 3) + 's');
-      star.style.setProperty('--delay', (Math.random() * 6) + 's');
-      star.style.setProperty('--peak', (0.7 + Math.random() * 0.3).toFixed(2));
-      const size = (18 + Math.random() * 16) + 'px';
-      star.style.width = size;
-      star.style.height = size;
-      container.appendChild(star);
+    const canvas = document.createElement('canvas');
+    canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none';
+    container.appendChild(canvas);
+
+    // パーティクルデータ生成（DOMではなくJSオブジェクト）
+    const stars = Array.from({length: 5}, () => ({
+      x: 10 + Math.random() * 80, y: 10 + Math.random() * 80,
+      size: 18 + Math.random() * 16,
+      dur: (2.5 + Math.random() * 3) * 1000,
+      delay: Math.random() * 6000,
+      peak: 0.7 + Math.random() * 0.3,
+    }));
+    const glitters = Array.from({length: 100}, () => ({
+      x: 1 + Math.random() * 98, y: 1 + Math.random() * 98,
+      size: 1.5 + Math.random() * 4,
+      dur: (1.5 + Math.random() * 3) * 1000,
+      delay: Math.random() * 8000,
+      peak: 0.3 + Math.random() * 0.7,
+    }));
+
+    let rafId = null;
+    let cw = 0, ch = 0;
+
+    function draw() {
+      if (!container.isConnected) { rafId = null; return; }
+      const w = container.offsetWidth, h = container.offsetHeight;
+      if (w !== cw || h !== ch) { cw = w; ch = h; canvas.width = w; canvas.height = h; }
+
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, cw, ch);
+      const now = Date.now();
+
+      // 星を描画
+      stars.forEach(p => {
+        const { opacity, scale, rotate } = getStarState(p, now);
+        if (opacity <= 0.01) return;
+        const r = (p.size * scale) / 2;
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
+        grad.addColorStop(0,   'rgba(255,240,150,0.95)');
+        grad.addColorStop(0.4, 'rgba(255,220,80,0.4)');
+        grad.addColorStop(1,   'rgba(255,220,80,0)');
+        ctx.save();
+        ctx.translate(p.x / 100 * cw, p.y / 100 * ch);
+        ctx.rotate(rotate * Math.PI / 180);
+        ctx.globalAlpha = opacity;
+        ctx.fillStyle = grad;
+        drawStarShape(ctx, r);
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // グリッターを描画
+      ctx.fillStyle = 'rgba(255,235,150,0.9)';
+      glitters.forEach(p => {
+        const { opacity, scale } = getGlitterState(p, now);
+        if (opacity <= 0.01) return;
+        ctx.globalAlpha = opacity;
+        ctx.beginPath();
+        ctx.arc(p.x / 100 * cw, p.y / 100 * ch, (p.size * scale) / 2, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      ctx.globalAlpha = 1;
+      rafId = requestAnimationFrame(draw);
     }
 
-    // 細かいキラキラ粒子（たくさん散らばる）
-    for (let i = 0; i < 100; i++) {
-      const glitter = document.createElement('span');
-      glitter.className = 'prediction-glitter';
-      glitter.style.left = (1 + Math.random() * 98) + '%';
-      glitter.style.top = (1 + Math.random() * 98) + '%';
-      glitter.style.setProperty('--dur', (1.5 + Math.random() * 3) + 's');
-      glitter.style.setProperty('--delay', (Math.random() * 8) + 's');
-      glitter.style.setProperty('--peak', (0.3 + Math.random() * 0.7).toFixed(2));
-      const size = (1.5 + Math.random() * 4) + 'px';
-      glitter.style.width = size;
-      glitter.style.height = size;
-      container.appendChild(glitter);
-    }
+    container._startSparkles = () => { if (!rafId) rafId = requestAnimationFrame(draw); };
+    container._stopSparkles  = () => { if (rafId) { cancelAnimationFrame(rafId); rafId = null; } };
   });
 }
 
