@@ -12,6 +12,16 @@
   <link rel="stylesheet" href="../shared/premium.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
+    /* スパークルはデフォルト停止、表示中スライドのみ動かす */
+    .prediction-star,
+    .prediction-glitter {
+      animation-play-state: paused;
+    }
+    #carousel-track .active-slide .prediction-star,
+    #carousel-track .active-slide .prediction-glitter {
+      animation-play-state: running;
+    }
+    /* ドラッグ中は全停止（active-slideより優先） */
     #carousel-track.is-dragging .prediction-star,
     #carousel-track.is-dragging .prediction-glitter {
       animation-play-state: paused;
@@ -391,6 +401,10 @@
         dot.className = i === currentSlide
           ? 'w-3.5 h-3.5 rounded-full bg-gold shadow-[0_0_6px_rgba(176,154,92,0.5)] transition-all duration-400'
           : 'w-3 h-3 rounded-full bg-gold/30 transition-all duration-400';
+      });
+      // 表示中のスライドのみスパークルを動かす（他は停止してGPU負荷を削減）
+      Array.from(trackEl.children).forEach((slide, i) => {
+        slide.classList.toggle('active-slide', i === virtualIndex);
       });
     }
 
