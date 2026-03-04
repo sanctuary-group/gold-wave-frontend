@@ -93,9 +93,11 @@ function getUserHeader() {
             <a href="predict.html" class="text-warm-text/80 hover:text-cream transition-all duration-400 flex items-center gap-1.5 text-sm">
               <i class="fa-solid fa-chart-line text-lg sm:text-sm"></i><span class="hidden sm:inline">予測</span>
             </a>
+            <!-- 一時非表示: 今週の一覧
             <a href="weekly.html" class="text-warm-text/80 hover:text-cream transition-all duration-400 flex items-center gap-1.5 text-sm">
               <i class="fa-solid fa-calendar-week text-lg sm:text-sm"></i><span class="hidden sm:inline">今週の一覧</span>
             </a>
+            -->
             ${getThemeToggleBtn()}
             <a href="login.html" class="text-warm-gray/60 hover:text-status-error transition-all duration-400 flex items-center gap-1.5 text-sm">
               <i class="fa-solid fa-right-from-bracket text-lg sm:text-sm"></i>
