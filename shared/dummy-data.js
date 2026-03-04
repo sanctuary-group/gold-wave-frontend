@@ -91,6 +91,14 @@ const DUMMY_WEEKLY = [
   { date: '2026-02-25', stadium: 12, race: 10, logic: 'B', confidence: 55, prediction: [5, 3, 1], result: null, hit: null }
 ];
 
+// AIコメントダミーデータ
+const DUMMY_AI_COMMENT = {
+  comment: '江戸川 1Rは荒れ傾向です',
+  recommendation: 4,
+  recommended_stadium: 9,
+  recommended_race: 1
+};
+
 // ユーザー一覧ダミーデータ (管理画面用)
 const DUMMY_USERS = [
   { id: 1, name: '山田 太郎', email: 'yamada@example.com', method: 'LINE', status: '有効', payment: '決済済', registered: '2026-01-15' },
