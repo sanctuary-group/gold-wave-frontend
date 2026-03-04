@@ -25,7 +25,21 @@ function getBoatBadge(number, size = 'md') {
 // 予想着順を矢印付きで表示
 function renderPredictionOrder(boats, size = 'md') {
   const arrowClass = size === 'lg' ? 'mx-2 text-gold/60 text-sm' : 'mx-1.5 text-warm-gray/50 text-xs';
-  return boats.map(n => getBoatBadge(n, size)).join(`<span class="${arrowClass}"><i class="fa-solid fa-chevron-right"></i></span>`);
+  const crownColors = ['text-yellow-400', 'text-gray-300', 'text-amber-600'];
+  const separator = `<span class="${arrowClass}"><i class="fa-solid fa-chevron-right"></i></span>`;
+
+  if (size === 'lg') {
+    return boats.map((n, i) => {
+      const crown = crownColors[i] || '';
+      const rank = i + 1;
+      const crownHtml = crown
+        ? `<span class="relative inline-flex items-center justify-center" style="margin-bottom:-10px;z-index:2"><i class="fa-solid fa-crown ${crown} text-4xl drop-shadow-lg"></i><span class="absolute font-bold text-dark" style="top:11px;font-size:0.6rem">${rank}</span></span>`
+        : '';
+      return `<div class="flex flex-col items-center">${crownHtml}${getBoatBadge(n, size)}</div>`;
+    }).join(separator);
+  }
+
+  return boats.map(n => getBoatBadge(n, size)).join(separator);
 }
 
 // 級別表示のクラス
