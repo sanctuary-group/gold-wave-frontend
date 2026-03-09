@@ -25,17 +25,28 @@ function getBoatBadge(number, size = 'md') {
 // 予想着順を矢印付きで表示
 function renderPredictionOrder(boats, size = 'md') {
   const arrowClass = size === 'lg' ? 'mx-2 text-gold/60 text-sm' : 'mx-1.5 text-warm-gray/50 text-xs';
-  const crownColors = ['text-yellow-400', 'text-gray-300', 'text-amber-600'];
   const separator = `<span class="${arrowClass}"><i class="fa-solid fa-chevron-right"></i></span>`;
 
   if (size === 'lg') {
+    const rankStyles = [
+      { crown: '#d4c28a', label: '1st', filter: 'filter:brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(10deg) brightness(0.85)', gradient: 'linear-gradient(135deg, #d4c28a, #b09a5c, #d4c28a)', glow: '0 0 12px rgba(176,154,92,0.4), 0 0 24px rgba(212,194,138,0.15)' },
+      { crown: '#b0b0b0', label: '2nd', filter: 'filter:brightness(0) invert(1) sepia(0) saturate(0) brightness(0.75)', gradient: 'linear-gradient(135deg, #c0c0c0, #8a8a8a, #c0c0c0)', glow: '0 0 8px rgba(160,160,160,0.3)' },
+      { crown: '#cd7f32', label: '3rd', filter: 'filter:brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(345deg) brightness(0.6)', gradient: 'linear-gradient(135deg, #cd7f32, #a0622d, #cd7f32)', glow: '0 0 8px rgba(141,125,63,0.3)' }
+    ];
+
     return boats.map((n, i) => {
-      const crown = crownColors[i] || '';
-      const rank = i + 1;
-      const crownHtml = crown
-        ? `<span class="relative inline-flex items-center justify-center" style="margin-bottom:-10px;z-index:2"><i class="fa-solid fa-crown ${crown} text-4xl drop-shadow-lg"></i><span class="absolute font-bold text-dark" style="top:11px;font-size:0.6rem">${rank}</span></span>`
-        : '';
-      return `<div class="flex flex-col items-center">${crownHtml}${getBoatBadge(n, size)}</div>`;
+      if (i < 3) {
+        const s = rankStyles[i];
+        return `<div class="flex flex-col items-center" style="gap:2px">` +
+          `<i class="fa-solid fa-crown" style="color:${s.crown};font-size:0.85rem;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.4))"></i>` +
+          `<div style="position:relative;width:60px;height:60px">` +
+            `<img src="../shared/assets/wreath.png" style="width:100%;height:100%;${s.filter}" alt="">` +
+            `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2"><div style="border-radius:50%;padding:3px;background:${s.gradient};box-shadow:${s.glow}">${getBoatBadge(n, size)}</div></div>` +
+          `</div>` +
+          `<span style="font-size:0.55rem;font-weight:700;color:${s.crown};letter-spacing:0.05em">${s.label}</span>` +
+        `</div>`;
+      }
+      return `<div class="flex flex-col items-center">${getBoatBadge(n, size)}</div>`;
     }).join(separator);
   }
 
