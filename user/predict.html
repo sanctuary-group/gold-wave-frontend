@@ -241,9 +241,9 @@
 
       const betsRows = pred.bets.map(bet => `
           <tr class="transition-all duration-400">
-            <td class="px-4 py-3 text-charcoal font-medium"><i class="fa-solid fa-ticket text-gold/40 mr-1.5 text-xs"></i>${bet.type}</td>
-            <td class="px-4 py-3 text-center font-mono text-charcoal font-semibold">${bet.combination}</td>
-            <td class="px-4 py-3 text-right font-mono font-bold text-gold-warm text-base">${bet.odds.toFixed(1)}<span class="text-xs text-warm-gray/60 ml-0.5">倍</span></td>
+            <td class="text-charcoal font-medium"><i class="fa-solid fa-ticket text-gold/40 mr-1.5 text-xs"></i>${bet.type}</td>
+            <td class="text-center font-mono text-charcoal font-semibold">${bet.combination}</td>
+            <td class="text-right font-mono font-bold text-gold-warm text-base">${bet.odds.toFixed(1)}<span class="text-xs text-warm-gray/60 ml-0.5">倍</span></td>
           </tr>
         `).join('');
 
