@@ -75,7 +75,12 @@
       "Bash(curl -s -m 10 'http://localhost:3000/v1/estimates/202604020101')",
       "Bash(curl -s -m 5 -I -X OPTIONS -H \"Origin: http://localhost:5500\" -H \"Access-Control-Request-Method: GET\" http://localhost:3000/v1/estimates?date=2026-04-02)",
       "Bash(curl -s -m 5 -I -X OPTIONS -H \"Origin: http://localhost:5500\" -H \"Access-Control-Request-Method: GET\" 'http://localhost:3000/v1/estimates?date=2026-04-02')",
-      "Bash(curl -s -m 5 -D - -H \"Origin: http://localhost:5500\" 'http://localhost:3000/v1/estimates?date=2026-04-02')"
+      "Bash(curl -s -m 5 -D - -H \"Origin: http://localhost:5500\" 'http://localhost:3000/v1/estimates?date=2026-04-02')",
+      "Bash(curl -s http://localhost:8080/health)",
+      "Bash(curl -s http://localhost:8080/v1/estimates?date=2026-04-02)",
+      "Bash(curl -s 'http://localhost:8080/v1/estimates?date=2026-04-02')",
+      "Bash(curl -s -H 'X-API-Key: ogenIegdRnasl3n2fthtjymthRWFEepwl' 'http://localhost:3000/v1/estimates?date=2026-03-10')",
+      "Bash(curl -s 'http://localhost:8080/v1/estimates?date=2026-03-10')"
     ]
   }
 }
