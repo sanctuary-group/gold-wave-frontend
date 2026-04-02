@@ -15,26 +15,14 @@ export default async function handler(req) {
   headers.set('x-api-key', apiKey);
   headers.delete('host');
 
-  try {
-    const res = await fetch(proxyUrl, {
-      method: req.method,
-      headers,
-      body: req.method !== 'GET' && req.method !== 'HEAD' ? req.body : undefined,
-    });
+  const res = await fetch(proxyUrl, {
+    method: req.method,
+    headers,
+    body: req.method !== 'GET' && req.method !== 'HEAD' ? req.body : undefined,
+  });
 
-    return new Response(res.body, {
-      status: res.status,
-      headers: res.headers,
-    });
-  } catch (err) {
-    return new Response(JSON.stringify({
-      error: err.message,
-      proxyUrl,
-      hasApiKey: !!apiKey,
-      hasTarget: !!target,
-    }), {
-      status: 502,
-      headers: { 'content-type': 'application/json' },
-    });
-  }
+  return new Response(res.body, {
+    status: res.status,
+    headers: res.headers,
+  });
 }
