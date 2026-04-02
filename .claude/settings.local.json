@@ -66,7 +66,16 @@
       "Bash(curl -s 'http://localhost:3000/doc')",
       "Bash(python3 -c \"import sys,json; paths=json.load\\(sys.stdin\\).get\\('paths',{}\\); print\\('\\\\n'.join\\(paths.keys\\(\\)\\)\\)\")",
       "Bash(node --env-file=.env --import tsx apps/ingest/src/jobs/ingest-boatracecsv.ts --mode forecast --target-date 2026-04-02)",
-      "Bash(curl -s 'http://localhost:3000/v1/estimates?date=2026-04-02')"
+      "Bash(curl -s 'http://localhost:3000/v1/estimates?date=2026-04-02')",
+      "Bash(gcloud run:*)",
+      "Bash(curl -s https://api-832917284977.asia-northeast1.run.app/health)",
+      "Bash(curl -s -m 5 http://localhost:3000/health)",
+      "Bash(curl -s -m 10 'http://localhost:3000/v1/estimates?date=2026-04-02')",
+      "Bash(curl -s -m 5 http://localhost:3000/)",
+      "Bash(curl -s -m 10 'http://localhost:3000/v1/estimates/202604020101')",
+      "Bash(curl -s -m 5 -I -X OPTIONS -H \"Origin: http://localhost:5500\" -H \"Access-Control-Request-Method: GET\" http://localhost:3000/v1/estimates?date=2026-04-02)",
+      "Bash(curl -s -m 5 -I -X OPTIONS -H \"Origin: http://localhost:5500\" -H \"Access-Control-Request-Method: GET\" 'http://localhost:3000/v1/estimates?date=2026-04-02')",
+      "Bash(curl -s -m 5 -D - -H \"Origin: http://localhost:5500\" 'http://localhost:3000/v1/estimates?date=2026-04-02')"
     ]
   }
 }

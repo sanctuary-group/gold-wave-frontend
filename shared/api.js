@@ -2,7 +2,7 @@
 // APIクライアント
 // ========================================
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = '';
 
 /**
  * GET リクエスト共通処理
